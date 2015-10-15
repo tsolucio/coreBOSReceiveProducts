@@ -231,7 +231,7 @@
                                         {elseif $button_check eq 'c_owner' && $MODULE eq 'Calendar'}
 											 <input class="crmbutton small edit" type="button" value="{$button_label}" onclick="return change(this,'changeowner')"/>
 										{elseif $button_check eq 'recalculate_stock'}
-                                             <input class="crmbutton small edit" type="button" value="{$button_label}" onclick="return recalculateStock(this)"/>
+                    	                     <input class="crmbutton small edit" type="button" value="{$button_label}" onclick="return recalculateStock(this)"/>
                                         {/if}
 
                                  {/foreach}

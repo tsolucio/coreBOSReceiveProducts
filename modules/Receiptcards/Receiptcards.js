@@ -20,7 +20,6 @@ function set_return_specific(receiptcards_id, receiptcards_name)
   fldId.value = receiptcards_id;
 }
 
-
 function fnAddProductRowRI(module,image_path){
 	rowCnt++;
 

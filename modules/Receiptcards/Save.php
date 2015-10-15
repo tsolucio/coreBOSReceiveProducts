@@ -10,17 +10,7 @@
  * The Initial Developer of the Original Code is SugarCRM, Inc.
  * Portions created by SugarCRM are Copyright (C) SugarCRM, Inc.;
  * All Rights Reserved.
- * Contributor(s): ______________________________________.
  ********************************************************************************/
-/*********************************************************************************
- * $Header: /cvsroot/vtigercrm/vtiger_crm/modules/Receiptcards/Save.php,v 1.8 2005/11/17 09:43:48 jerrydgeorge Exp $
- * Description:  Saves an Account record and then redirects the browser to the 
- * defined return URL.
- * Portions created by SugarCRM are Copyright (C) SugarCRM, Inc.
- * All Rights Reserved.
- * Contributor(s): ______________________________________..
- ********************************************************************************/
-
 require_once('modules/Receiptcards/Receiptcards.php');
 require_once('include/logging.php');
 require_once('include/database/PearDatabase.php');

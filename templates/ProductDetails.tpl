@@ -1,5 +1,4 @@
 {*<!--
-
 /*********************************************************************************
 ** The contents of this file are subject to the vtiger CRM Public License Version 1.0
  * ("License"); You may not use this file except in compliance with the License
@@ -7,20 +6,17 @@
  * The Initial Developer of the Original Code is vtiger.
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
-*
  ********************************************************************************/
-
 -->*}
 
 <script type="text/javascript" src="include/js/Inventory.js"></script>
 <script type="text/javascript" src="modules/Services/Services.js"></script>
 <script>
-if(!e)
+if(typeof(e) != 'undefined')
 	window.captureEvents(Event.MOUSEMOVE);
 
 //  window.onmousemove= displayCoords;
 //  window.onclick = fnRevert;
-  
 function displayCoords(currObj,obj,mode,curr_row) 
 {ldelim}
 	if(mode != 'discount_final' && mode != 'sh_tax_div_title' && mode != 'group_tax_div_title')
@@ -164,8 +160,8 @@ function displayCoords(currObj,obj,mode,curr_row)
 				<input type="hidden" id="lineItemType1" name="lineItemType1" value="Products" />
 				&nbsp;<img id="searchIcon1" title="Products" src="{'products.gif'|@vtiger_imageurl:$THEME}" style="cursor: pointer;" align="absmiddle" onclick="productPickList(this,'{$MODULE}',1)" />
 			</td>
-		   </tr>
-		   <tr>
+		</tr>
+		<tr>
 			<td class="small">
 				<input type="hidden" value="" id="subproduct_ids1" name="subproduct_ids1" />
 				<span id="subprod_names1" name="subprod_names1" style="color:#C0C0C0;font-style:italic;"> </span>
@@ -268,15 +264,6 @@ function displayCoords(currObj,obj,mode,curr_row)
 </table>
 <!-- Upto this has been added for form the first row. Based on these above we should form additional rows using script -->
 
-
-
-
-
-
-
-
-
-
 <table width="100%"  border="0" align="center" cellpadding="5" cellspacing="0" class="crmTable">
    <!-- Add Product Button -->
    <tr>
@@ -286,9 +273,6 @@ function displayCoords(currObj,obj,mode,curr_row)
 			<input type="button" name="Button" class="crmbutton small create" value="{$APP.LBL_ADD_SERVICE}" onclick="fnAddServiceRowRI('{$MODULE}','{$IMAGE_PATH}');" />
 	</td>
    </tr>
-
-
-
 
    <!-- Product Details Final Total Discount, Tax and Shipping&Hanling  - Starts -->
    <tr valign="top">
@@ -442,5 +426,15 @@ function displayCoords(currObj,obj,mode,curr_row)
    </tr>
 
 
+<!-- Added to calculate the tax and total values when page loads -->
+<script>
+ decideTaxDiv();
+ {if $TAX_TYPE eq 'group'}
+ 	calcGroupTax();
+ {/if}
+ calcTotal();
+ calcSHTax();
+</script>
+<!-- This above div is added to display the tax informations --> 
 
 

@@ -1,5 +1,4 @@
 {*<!--
-
 /*********************************************************************************
 ** The contents of this file are subject to the vtiger CRM Public License Version 1.0
  * ("License"); You may not use this file except in compliance with the License
@@ -7,13 +6,8 @@
  * The Initial Developer of the Original Code is vtiger.
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
-*
  ********************************************************************************/
-
 -->*}
-
-{*<!-- module header -->*}
-
 <link rel="stylesheet" type="text/css" media="all" href="jscalendar/calendar-win2k-cold-1.css">
 <script type="text/javascript" src="jscalendar/calendar.js"></script>
 <script type="text/javascript" src="jscalendar/lang/calendar-{$CALENDAR_LANG}.js"></script>
@@ -42,10 +36,9 @@ function sensex_info()
                 );
         {rdelim}
 {rdelim}
-
 </script>
 
-		{include file='Buttons_List1.tpl'}	
+{include file='Buttons_List1.tpl'}
 
 {*<!-- Contents -->*}
 <table border=0 cellspacing=0 cellpadding=0 width=98% align=center>
@@ -55,13 +48,11 @@ function sensex_info()
 	<td class="showPanelBg" valign=top width=100%>
 		{*<!-- PUBLIC CONTENTS STARTS-->*}
 		<div class="small" style="padding:20px">
-		
 			{if $OP_MODE eq 'edit_view'}
-			   	{assign var="USE_ID_VALUE" value=$MOD_SEQ_ID}
-		  		{if $USE_ID_VALUE eq ''} {assign var="USE_ID_VALUE" value=$ID} {/if}			
-			   
-				<span class="lvtHeaderText"><font color="purple">[ {$USE_ID_VALUE} ] </font>{$NAME} - {$APP.LBL_EDITING} {$MOD[$SINGLE_MOD]} {$APP.LBL_INFORMATION}</span> <br>
-				{$UPDATEINFO}	 
+				{assign var="USE_ID_VALUE" value=$MOD_SEQ_ID}
+				{if $USE_ID_VALUE eq ''} {assign var="USE_ID_VALUE" value=$ID} {/if}
+				<span class="lvtHeaderText"><font color="purple">[ {$USE_ID_VALUE} ] </font>{$NAME} - {$APP.LBL_EDITING} {$SINGLE_MOD|@getTranslatedString:$MODULE} {$APP.LBL_INFORMATION}</span> <br>
+				{$UPDATEINFO}
 			{/if}
 			{if $OP_MODE eq 'create_view'}
 				<span class="lvtHeaderText">{$APP.LBL_CREATING} {$MOD[$SINGLE_MOD]}</span> <br>
@@ -69,7 +60,6 @@ function sensex_info()
 
 			<hr noshade size=1>
 			<br> 
-		
 			<form id="frmEditView" name="EditView" method="POST" action="index.php" onSubmit="settotalnoofrows();calcTotal();VtigerJS_DialogBox.block();">
       	    <input type="hidden" name="hidImagePath" id="hidImagePath" value="{$IMAGE_PATH}"/>
            	<input type="hidden" name="convertmode">
@@ -91,9 +81,9 @@ function sensex_info()
 					<table border=0 cellspacing=0 cellpadding=3 width=100% class="small">
 					   <tr>
 						<td class="dvtTabCache" style="width:10px" nowrap>&nbsp;</td>
-                                        	<td class="dvtSelectedCell" align=center nowrap>{$MOD[$SINGLE_MOD]} {$APP.LBL_INFORMATION}</td>
-	                                        <td class="dvtTabCache" style="width:10px">&nbsp;</td>
-                	                        <td class="dvtTabCache" style="width:100%">&nbsp;</td>
+						<td class="dvtSelectedCell" align=center nowrap> {$SINGLE_MOD|@getTranslatedString:$MODULE} {$APP.LBL_INFORMATION}</td>
+						<td class="dvtTabCache" style="width:10px">&nbsp;</td>
+						<td class="dvtTabCache" style="width:100%">&nbsp;</td>
 					   </tr>
 					</table>
 				</td>
@@ -105,7 +95,6 @@ function sensex_info()
 
 						<td align=left style="padding:10px;border-right:1px #CCCCCC;" width=80%>
 							{*<!-- content cache -->*}
-					
 							<table border=0 cellspacing=0 cellpadding=0 width=100%>
 							   <tr>
 								<td id ="autocom"></td>
@@ -115,7 +104,7 @@ function sensex_info()
 								<!-- General details -->
 									<table border=0 cellspacing=0 cellpadding=0 width=100% class="small">
 									   <tr>
-										<td  colspan=4 style="padding:5px">
+										<td colspan=4 style="padding:5px">
 										   <div align="center">
 											<input title="{$APP.LBL_SAVE_BUTTON_TITLE}" accessKey="{$APP.LBL_SAVE_BUTTON_KEY}" class="crmbutton small save" onclick="this.form.action.value='Save'; displaydeleted(); return validateInventory('{$MODULE}')" type="submit" name="button" value="  {$APP.LBL_SAVE_BUTTON_LABEL}  " style="width:70px" >
 											<input title="{$APP.LBL_CANCEL_BUTTON_TITLE}" accessKey="{$APP.LBL_CANCEL_BUTTON_KEY}" class="crmbutton small cancel" onclick="window.history.back()" type="button" name="button" value="{$APP.LBL_CANCEL_BUTTON_LABEL}  " style="width:70px">
@@ -126,9 +115,9 @@ function sensex_info()
 									   <!-- included to handle the edit fields based on ui types -->
 									   {foreach key=header item=data from=$BLOCKS}
 									      <tr>
-    										<td colspan=4 class="detailedViewHeader">
-    											<b>{$header}</b>
-    										</td>
+        									  <td colspan=4 class="detailedViewHeader">
+        										  <b>{$header}</b>
+        									  </td>
 									      </tr>
 
 										<!-- Handle the ui types display -->
@@ -175,13 +164,10 @@ function sensex_info()
 <!-- This div is added to get the left and top values to show the tax details-->
 <div id="tax_container" style="display:none; position:absolute; z-index:1px;"></div>
 
-<script>	
-        var fieldname = new Array({$VALIDATION_DATA_FIELDNAME})
-
-        var fieldlabel = new Array({$VALIDATION_DATA_FIELDLABEL})
-
-        var fielddatatype = new Array({$VALIDATION_DATA_FIELDDATATYPE})
-
+<script>
+	var fieldname = new Array({$VALIDATION_DATA_FIELDNAME})
+	var fieldlabel = new Array({$VALIDATION_DATA_FIELDLABEL})
+	var fielddatatype = new Array({$VALIDATION_DATA_FIELDDATATYPE})
 	var product_labelarr = {ldelim}CLEAR_COMMENT:'{$APP.LBL_CLEAR_COMMENT}',
 				DISCOUNT:'{$APP.LBL_DISCOUNT}',
 				TOTAL_AFTER_DISCOUNT:'{$APP.LBL_TOTAL_AFTER_DISCOUNT}',
@@ -189,7 +175,6 @@ function sensex_info()
 				ZERO_DISCOUNT:'{$APP.LBL_ZERO_DISCOUNT}',
 				PERCENT_OF_PRICE:'{$APP.LBL_OF_PRICE}',
 				DIRECT_PRICE_REDUCTION:'{$APP.LBL_DIRECT_PRICE_REDUCTION}'{rdelim};
-
 	var ProductImages=new Array();
 	var count=0;
 	function delRowEmt(imagename)

@@ -143,16 +143,16 @@ function getListOfRecords(obj, sModule, iId,sParentTab)
 				   </tr>
 				</table>
 				<br>
-						
+
 				<!-- Entity and More information tabs -->
 				<table border=0 cellspacing=0 cellpadding=0 width=95% align=center>
 				   <tr>
-					<td>						
+					<td>
    						<table border=0 cellspacing=0 cellpadding=3 width=100% class="small">
 						   <tr>
 								<td class="dvtTabCache" style="width:10px" nowrap>&nbsp;</td>
 								
-								<td class="dvtSelectedCell" align=center nowrap>{$SINGLE_MOD|@getTranslatedString:$MODULE} {$APP.LBL_INFORMATION}</td>	
+								<td class="dvtSelectedCell" align=center nowrap>{$SINGLE_MOD|@getTranslatedString:$MODULE} {$APP.LBL_INFORMATION}</td>
 								<td class="dvtTabCache" style="width:10px">&nbsp;</td>
 								{if $SinglePane_View eq 'false'}
 								<td class="dvtUnSelectedCell" align=center nowrap><a href="index.php?action=CallRelatedList&module={$MODULE}&record={$ID}&parenttab={$CATEGORY}">{$APP.LBL_MORE} {$APP.LBL_INFORMATION}</a></td>
@@ -167,12 +167,11 @@ function getListOfRecords(obj, sModule, iId,sParentTab)
 									{if $DELETE eq 'permitted'}
 									<input title="{$APP.LBL_DELETE_BUTTON_TITLE}" accessKey="{$APP.LBL_DELETE_BUTTON_KEY}" class="crmbutton small delete" onclick="DetailView.return_module.value='{$MODULE}'; DetailView.return_action.value='index'; {if $MODULE eq 'Accounts'} var confirmMsg = '{$APP.NTC_ACCOUNT_DELETE_CONFIRMATION}' {else} var confirmMsg = '{$APP.NTC_DELETE_CONFIRMATION}' {/if}; submitFormForActionWithConfirmation('DetailView', 'Delete', confirmMsg);" type="button" name="Delete" value="{$APP.LBL_DELETE_BUTTON_LABEL}">&nbsp;
 									{/if}
-								
 									{if $privrecord neq ''}
 									<img align="absmiddle" title="{$APP.LNK_LIST_PREVIOUS}" accessKey="{$APP.LNK_LIST_PREVIOUS}" onclick="location.href='index.php?module={$MODULE}&viewtype={$VIEWTYPE}&action=DetailView&record={$privrecord}&parenttab={$CATEGORY}'" name="privrecord" value="{$APP.LNK_LIST_PREVIOUS}" src="{'rec_prev.gif'|@vtiger_imageurl:$THEME}">&nbsp;
 									{else}
 									<img align="absmiddle" title="{$APP.LNK_LIST_PREVIOUS}" src="{'rec_prev_disabled.gif'|@vtiger_imageurl:$THEME}">
-									{/if}							
+									{/if}
 									{if $privrecord neq '' || $nextrecord neq ''}
 									<img align="absmiddle" title="{$APP.LBL_JUMP_BTN}" accessKey="{$APP.LBL_JUMP_BTN}" onclick="var obj = this;var lhref = getListOfRecords(obj, '{$MODULE}',{$ID},'{$CATEGORY}');" name="jumpBtnIdTop" id="jumpBtnIdTop" src="{'rec_jump.gif'|@vtiger_imageurl:$THEME}">&nbsp;
 									{/if}
@@ -189,26 +188,24 @@ function getListOfRecords(obj, sModule, iId,sParentTab)
 				   <tr>
 					<td valign=top align=left >
 						<table border=0 cellspacing=0 cellpadding=3 width=100% class="dvtContentSpace" style="border-bottom:0px;">
-						   <tr>
+						   <tr valign=top>
 
 							<td align=left style="padding:10px;">
 							<!-- content cache -->
 								<form action="index.php" method="post" name="DetailView" id="form" onsubmit="VtigerJS_DialogBox.block();">
 								{include file='DetailViewHidden.tpl'}
 						
-								<!-- Entity informations display - starts -->	
+								<!-- Entity informations display - starts -->
 								<table border=0 cellspacing=0 cellpadding=0 width=100%>
 			                			   <tr>
 									<td style="padding:10px;border-right:1px dashed #CCCCCC;" width="80%">
 
-
-
 <!-- The following table is used to display the buttons -->
 <!-- Button displayed - finished-->
-							 {include_php file="./include/DetailViewBlockStatus.php"}
+{include_php file="include/DetailViewBlockStatus.php"}
 
 <!-- Entity information(blocks) display - start -->
-{foreach key=header item=detail from=$BLOCKS}
+{foreach key=header item=detail from=$BLOCKS name=BLOCKS}
 	<table border=0 cellspacing=0 cellpadding=0 width=100% class="small">
 	   <tr>
 		<td>&nbsp;</td>
@@ -264,6 +261,8 @@ function getListOfRecords(obj, sModule, iId,sParentTab)
 					{elseif $label neq 'Tax Class'}<!-- Avoid to display the label Tax Class -->
 						{if $keyid eq '71' || $keyid eq '72'}  <!--CurrencySymbol-->
 							<td class="dvtCellLabel" align=right width=25%><input type="hidden" id="hdtxt_IsAdmin" value={$keyadmin}></input>{$label} ({$keycursymb})</td>
+						{elseif $keyid eq '9'}
+							<td class="dvtCellLabel" align=right width=25%><input type="hidden" id="hdtxt_IsAdmin" value={$keyadmin}></input>{$label} {$APP.COVERED_PERCENTAGE}</td>
 						{else}
 							<td class="dvtCellLabel" align=right width=25%><input type="hidden" id="hdtxt_IsAdmin" value={$keyadmin}></input>{$label}</td>
 						{/if}
@@ -320,12 +319,11 @@ function getListOfRecords(obj, sModule, iId,sParentTab)
 										</div>
 									</td>
 								   </tr>
-								   
 								</table>
 							</td>
 						   </tr>
 						    <tr>
-					<td>						
+					<td>
    						<table border=0 cellspacing=0 cellpadding=3 width=100% class="small">
 						   <tr>
 								<td class="dvtTabCacheBottom" style="width:10px" nowrap>&nbsp;</td>
@@ -350,7 +348,7 @@ function getListOfRecords(obj, sModule, iId,sParentTab)
 									<img align="absmiddle" title="{$APP.LNK_LIST_PREVIOUS}" accessKey="{$APP.LNK_LIST_PREVIOUS}" onclick="location.href='index.php?module={$MODULE}&viewtype={$VIEWTYPE}&action=DetailView&record={$privrecord}&parenttab={$CATEGORY}'" name="privrecord" value="{$APP.LNK_LIST_PREVIOUS}" src="{'rec_prev.gif'|@vtiger_imageurl:$THEME}">&nbsp;
 									{else}
 									<img align="absmiddle" title="{$APP.LNK_LIST_PREVIOUS}" src="{'rec_prev_disabled.gif'|@vtiger_imageurl:$THEME}">
-									{/if}							
+									{/if}
 									{if $privrecord neq '' || $nextrecord neq ''}
 									<img align="absmiddle" title="{$APP.LBL_JUMP_BTN}" accessKey="{$APP.LBL_JUMP_BTN}" onclick="var obj = this;var lhref = getListOfRecords(obj, '{$MODULE}',{$ID},'{$CATEGORY}');" name="jumpBtnIdBottom" id="jumpBtnIdBottom" src="{'rec_jump.gif'|@vtiger_imageurl:$THEME}">&nbsp;
 									{/if}
@@ -377,10 +375,11 @@ function getListOfRecords(obj, sModule, iId,sParentTab)
 		   </tr>
 		</table>
 		<!-- Contents - end -->
-
 <script>
 function getTagCloud()
 {ldelim}
+	var obj = $("tagfields");
+	if(obj != null && typeof(obj) != undefined) {ldelim}
 new Ajax.Request(
         'index.php',
         {ldelim}queue: {ldelim}position: 'end', scope: 'command'{rdelim},
@@ -393,6 +392,7 @@ new Ajax.Request(
         {rdelim}
 );
 {rdelim}
+{rdelim}
 getTagCloud();
 </script>
 
@@ -404,4 +404,3 @@ getTagCloud();
   var fieldlabel = new Array({$VALIDATION_DATA_FIELDLABEL});
   var fielddatatype = new Array({$VALIDATION_DATA_FIELDDATATYPE});
 </script>
-

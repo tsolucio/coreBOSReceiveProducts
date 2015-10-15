@@ -57,10 +57,10 @@ function sensex_info()
 
 	<td class="showPanelBg" valign=top width=100%>
 	     {*<!-- PUBLIC CONTENTS STARTS-->*}
-		 <form id="frmEditView" name="EditView" method="POST" action="index.php" onSubmit="settotalnoofrows();calcTotal();VtigerJS_DialogBox.block();">
+	 	 <form id="frmEditView" name="EditView" method="POST" action="index.php" onSubmit="settotalnoofrows();calcTotal();VtigerJS_DialogBox.block();">
   	     <input type="hidden" name="hidImagePath" id="hidImagePath" value="{$IMAGE_PATH}"/>
-         <input type="hidden" name="convertmode">
-	 	 <input type="hidden" name="pagenumber" value="{$smarty.request.start|@vtlib_purify}">
+       	 <input type="hidden" name="convertmode">
+		 <input type="hidden" name="pagenumber" value="{$smarty.request.start|@vtlib_purify}">
          <input type="hidden" name="module" value="{$MODULE}">
          <input type="hidden" name="record" value="{$ID}">
          <input type="hidden" name="mode" value="{$MODE}">
@@ -70,7 +70,7 @@ function sensex_info()
          <input type="hidden" name="return_id" value="{$RETURN_ID}">
          <input type="hidden" name="return_action" value="{$RETURN_ACTION}">
          <input type="hidden" name="return_viewname" value="{$RETURN_VIEWNAME}">
-        
+		
 	     <div class="small" style="padding:20px">
 		
 		 {if $OP_MODE eq 'edit_view'}   
@@ -85,10 +85,8 @@ function sensex_info()
 			{/if}
 		 {/if}
 
-		 <hr noshade size=1>
-		 <br> 
-		
-		
+			<hr noshade size=1>
+			<br>
 
 		{*<!-- Account details tabs -->*}
 		<table border=0 cellspacing=0 cellpadding=0 width=95% align=center>
@@ -209,12 +207,12 @@ function sensex_info()
         var fielddatatype = new Array({$VALIDATION_DATA_FIELDDATATYPE})
 
 	var product_labelarr = {ldelim}CLEAR_COMMENT:'{$APP.LBL_CLEAR_COMMENT}',
-                                DISCOUNT:'{$APP.LBL_DISCOUNT}',
-                                TOTAL_AFTER_DISCOUNT:'{$APP.LBL_TOTAL_AFTER_DISCOUNT}',
-                                TAX:'{$APP.LBL_TAX}',
-                                ZERO_DISCOUNT:'{$APP.LBL_ZERO_DISCOUNT}',
-                                PERCENT_OF_PRICE:'{$APP.LBL_OF_PRICE}',
-                                DIRECT_PRICE_REDUCTION:'{$APP.LBL_DIRECT_PRICE_REDUCTION}'{rdelim};
+				DISCOUNT:'{$APP.LBL_DISCOUNT}',
+				TOTAL_AFTER_DISCOUNT:'{$APP.LBL_TOTAL_AFTER_DISCOUNT}',
+				TAX:'{$APP.LBL_TAX}',
+				ZERO_DISCOUNT:'{$APP.LBL_ZERO_DISCOUNT}',
+				PERCENT_OF_PRICE:'{$APP.LBL_OF_PRICE}',
+				DIRECT_PRICE_REDUCTION:'{$APP.LBL_DIRECT_PRICE_REDUCTION}'{rdelim};
 
 </script>
 

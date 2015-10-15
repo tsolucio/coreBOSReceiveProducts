@@ -1,5 +1,4 @@
 {*<!--
-
 /*********************************************************************************
 ** The contents of this file are subject to the vtiger CRM Public License Version 1.0
  * ("License"); You may not use this file except in compliance with the License
@@ -7,20 +6,17 @@
  * The Initial Developer of the Original Code is vtiger.
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
-*
  ********************************************************************************/
-
 -->*}
 
 <script type="text/javascript" src="include/js/Inventory.js"></script>
 <!-- Added to display the Product Details -->
 <script type="text/javascript">
-if(!e)
+if(typeof(e) != 'undefined')
 	window.captureEvents(Event.MOUSEMOVE);
 
 //  window.onmousemove= displayCoords;
 //  window.onclick = fnRevert;
-  
 function displayCoords(currObj,obj,mode,curr_row) 
 {ldelim}
 	if(mode != 'discount_final' && mode != 'sh_tax_div_title' && mode != 'group_tax_div_title')
@@ -337,8 +333,6 @@ function displayCoords(currObj,obj,mode,curr_row)
    {/foreach}
 </table>
 
-
-
 <table width="100%"  border="0" align="center" cellpadding="5" cellspacing="0" class="crmTable">
    <!-- Add Product Button -->
    <tr>
@@ -347,9 +341,6 @@ function displayCoords(currObj,obj,mode,curr_row)
 			<input type="button" name="Button" class="crmbutton small create" value="{$APP.LBL_ADD_SERVICE}" onclick="fnAddServiceRow('{$MODULE}','{$IMAGE_PATH}');" />
 	</td>
    </tr>
-
-
-
 
 <!--
 All these details are stored in the first element in the array with the index name as final_details 
@@ -529,9 +520,14 @@ so we will get that array, parse that array and fill the details
 
 
 <!-- Added to calculate the tax and total values when page loads -->
-<script>decideTaxDiv();</script>
-<script>calcTotal();</script>
-<script>calcSHTax();</script>
+<script>
+ decideTaxDiv();
+ {if $TAX_TYPE eq 'group'}
+ 	calcGroupTax();
+ {/if}
+ calcTotal();
+ calcSHTax();
+</script>
 <!-- This above div is added to display the tax informations --> 
 
 

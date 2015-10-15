@@ -6,9 +6,7 @@
  * The Initial Developer of the Original Code is vtiger.
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
-*
  ********************************************************************************/
-
 require_once('modules/Receiptcards/Receiptcards.php');
 global $mod_strings;
 
@@ -22,12 +20,10 @@ if(!isset($_REQUEST['record']))
 
 if($_REQUEST['module'] == $_REQUEST['return_module'])
 {
-    $focus->id = $_REQUEST['record'];
-    deleteReceiptcardsInventoryProductDetails($focus, false);
-   
-    $focus->mark_deleted($_REQUEST['record']);
+	$focus->id = $_REQUEST['record'];
+	deleteReceiptcardsInventoryProductDetails($focus, false);
+	$focus->mark_deleted($_REQUEST['record']);
 }
-	
 
 if(isset($_REQUEST['parenttab']) && $_REQUEST['parenttab'] != "") $parenttab = $_REQUEST['parenttab'];
 

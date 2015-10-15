@@ -383,7 +383,7 @@ function recalculateStock()
                               postBody:url,
                               onComplete: function(response) {
                               
-                                   $("status").style.display="none";
+                                  $("status").style.display="none";
                               }
                       }
                       );
