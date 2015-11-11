@@ -20,7 +20,6 @@ if(isset($_REQUEST['record']) && isset($_REQUEST['record'])) {
     $focus->retrieve_entity_info($_REQUEST['record'],"Receiptcards");
     $focus->id = $_REQUEST['record'];
     $focus->name=$focus->column_fields['subject'];		
-    
     if ($focus->column_fields['parent_id'] == "0") $focus->column_fields['parent_id'] = "";
 }
 
@@ -126,7 +125,7 @@ function getReceiptcardsDetailAssociatedProducts($focus)
 	global $app_strings,$current_user;
 	$theme_path="themes/".$theme."/";
 	$image_path=$theme_path."images/";
-	
+
 	//Get the taxtype of this entity
   $taxtype = getReceiptcardsInventoryTaxType($focus->id);
 

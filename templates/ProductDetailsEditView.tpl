@@ -337,8 +337,8 @@ function displayCoords(currObj,obj,mode,curr_row)
    <!-- Add Product Button -->
    <tr>
 	<td colspan="3">
-			<input type="button" name="Button" class="crmbutton small create" value="{$APP.LBL_ADD_PRODUCT}" onclick="fnAddProductRow('{$MODULE}','{$IMAGE_PATH}');" />
-			<input type="button" name="Button" class="crmbutton small create" value="{$APP.LBL_ADD_SERVICE}" onclick="fnAddServiceRow('{$MODULE}','{$IMAGE_PATH}');" />
+			<input type="button" name="Button" class="crmbutton small create" value="{$APP.LBL_ADD_PRODUCT}" onclick="fnAddProductRowRI('{$MODULE}','{$IMAGE_PATH}');" />
+			<input type="button" name="Button" class="crmbutton small create" value="{$APP.LBL_ADD_SERVICE}" onclick="fnAddServiceRowRI('{$MODULE}','{$IMAGE_PATH}');" />
 	</td>
    </tr>
 

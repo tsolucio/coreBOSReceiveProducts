@@ -14,8 +14,18 @@
 <script type="text/javascript" src="jscalendar/calendar-setup.js"></script>
 <script type="text/javascript" src="include/js/Inventory.js"></script>
 <script type="text/javascript" src="modules/Services/Services.js"></script>
+<script type="text/javascript" src="include/js/FieldDependencies.js"></script>
+<script type="text/javascript" src="modules/com_vtiger_workflow/resources/jquery-1.2.6.js"></script>
 <script type="text/javascript">
+	jQuery.noConflict();
+</script>
+{if $PICKIST_DEPENDENCY_DATASOURCE neq ''}
+<script type="text/javascript">
+	jQuery(document).ready(function() {ldelim} (new FieldDependencies({$PICKIST_DEPENDENCY_DATASOURCE})).init() {rdelim});
+</script>
+{/if}
 
+<script type="text/javascript">
 function sensex_info()
 {ldelim}
         var Ticker = $('tickersymbol').value;
@@ -55,7 +65,18 @@ function sensex_info()
 				{$UPDATEINFO}
 			{/if}
 			{if $OP_MODE eq 'create_view'}
-				<span class="lvtHeaderText">{$APP.LBL_CREATING} {$MOD[$SINGLE_MOD]}</span> <br>
+				{if $DUPLICATE neq 'true'}
+					{assign var=create_new value="LBL_CREATING_NEW_"|cat:$SINGLE_MOD}
+					{* vtlib customization: use translation only if present *}
+					{assign var="create_newlabel" value=$APP.$create_new}
+					{if $create_newlabel neq ''}
+						<span class="lvtHeaderText">{$create_newlabel}</span> <br>
+					{else}
+						<span class="lvtHeaderText">{$APP.LBL_CREATING} {$APP.LBL_NEW} {$SINGLE_MOD|@getTranslatedString:$MODULE}</span> <br>
+					{/if}
+				{else}
+					<span class="lvtHeaderText">{$APP.LBL_DUPLICATING} "{$NAME}" </span> <br>
+				{/if}
 			{/if}
 
 			<hr noshade size=1>

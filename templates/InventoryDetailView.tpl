@@ -154,8 +154,18 @@ function getListOfRecords(obj, sModule, iId,sParentTab)
 								
 								<td class="dvtSelectedCell" align=center nowrap>{$SINGLE_MOD|@getTranslatedString:$MODULE} {$APP.LBL_INFORMATION}</td>
 								<td class="dvtTabCache" style="width:10px">&nbsp;</td>
-								{if $SinglePane_View eq 'false'}
-								<td class="dvtUnSelectedCell" align=center nowrap><a href="index.php?action=CallRelatedList&module={$MODULE}&record={$ID}&parenttab={$CATEGORY}">{$APP.LBL_MORE} {$APP.LBL_INFORMATION}</a></td>
+								{if $SinglePane_View eq 'false' && $IS_REL_LIST neq false && $IS_REL_LIST|@count > 0}
+									<td class="dvtUnSelectedCell" onmouseout="fnHideDrop('More_Information_Modules_List');" onmouseover="fnDropDown(this,'More_Information_Modules_List');" align="center" nowrap>
+										<a href="index.php?action=CallRelatedList&module={$MODULE}&record={$ID}&parenttab={$CATEGORY}">{$APP.LBL_MORE} {$APP.LBL_INFORMATION}</a>
+										<div onmouseover="fnShowDrop('More_Information_Modules_List')" onmouseout="fnHideDrop('More_Information_Modules_List')"
+													 id="More_Information_Modules_List" class="drop_mnu" style="left: 502px; top: 76px; display: none;">
+											<table border="0" cellpadding="0" cellspacing="0" width="100%">
+											{foreach key=_RELATION_ID item=_RELATED_MODULE from=$IS_REL_LIST}
+												<tr><td><a class="drop_down" href="index.php?action=CallRelatedList&module={$MODULE}&record={$ID}&parenttab={$CATEGORY}&selected_header={$_RELATED_MODULE}&relation_id={$_RELATION_ID}">{$_RELATED_MODULE|@getTranslatedString:$_RELATED_MODULE}</a></td></tr>
+											{/foreach}
+											</table>
+										</div>
+									</td>
 								{/if}
 								<td class="dvtTabCache" align="right" style="width:100%">
 									{if $EDIT_DUPLICATE eq 'permitted'}
@@ -252,8 +262,9 @@ function getListOfRecords(obj, sModule, iId,sParentTab)
 			{assign var=keycursymb value=$data.cursymb}
 			{assign var=keysalut value=$data.salut}
 			{assign var=keycntimage value=$data.cntimage}
-			   {assign var=keyadmin value=$data.isadmin}
-							   
+			{assign var=keyadmin value=$data.isadmin}
+			{assign var=display_type value=$data.displaytype}
+			{assign var=_readonly value=$data.readonly}
 
 				{if $label ne ''}
 					{if $keycntimage ne ''}
@@ -267,7 +278,7 @@ function getListOfRecords(obj, sModule, iId,sParentTab)
 							<td class="dvtCellLabel" align=right width=25%><input type="hidden" id="hdtxt_IsAdmin" value={$keyadmin}></input>{$label}</td>
 						{/if}
 					{/if}  
-					{if $EDIT_PERMISSION eq 'yes' && $display_type neq '2'}
+					{if $EDIT_PERMISSION eq 'yes' && $display_type neq '2' && $_readonly eq '0'}
 						{* Performance Optimization Control *}
 						{if !empty($DETAILVIEW_AJAX_EDIT) }
 							{include file="DetailViewUI.tpl"}
@@ -280,15 +291,31 @@ function getListOfRecords(obj, sModule, iId,sParentTab)
 					{/if}
 				{/if}
 		{/foreach}
-	   </tr>	
-	   {/foreach}	
+	   </tr>
+	   {/foreach}
 	</table>
-							 </div> <!-- Line added by SAKTI on 10th Apr, 2008 -->
-{/foreach}
-{*-- End of Blocks--*} 
+	</div> <!-- Line added by SAKTI on 10th Apr, 2008 -->
 <!-- Entity information(blocks) display - ends -->
 
-									<br>
+{* vtlib Customization: Embed DetailViewWidget block:// type if any *}
+{if $CUSTOM_LINKS && !empty($CUSTOM_LINKS.DETAILVIEWWIDGET)}
+{foreach item=CUSTOM_LINK_DETAILVIEWWIDGET from=$CUSTOM_LINKS.DETAILVIEWWIDGET}
+	{if preg_match("/^block:\/\/.*/", $CUSTOM_LINK_DETAILVIEWWIDGET->linkurl)}
+		 {if ($smarty.foreach.BLOCKS.first && $CUSTOM_LINK_DETAILVIEWWIDGET->sequence <= 1) 
+		 	|| ($CUSTOM_LINK_DETAILVIEWWIDGET->sequence == $smarty.foreach.BLOCKS.iteration + 1)
+		 	|| ($smarty.foreach.BLOCKS.last && $CUSTOM_LINK_DETAILVIEWWIDGET->sequence >= $smarty.foreach.BLOCKS.iteration + 1)}
+		<br>
+		{php}
+			echo vtlib_process_widget($this->_tpl_vars['CUSTOM_LINK_DETAILVIEWWIDGET'], $this->_tpl_vars);
+		{/php}
+		{/if}
+	{/if}
+{/foreach}
+{/if}
+{* END *}
+{/foreach}
+{*-- End of Blocks--*} 
+<br>
 
 										<!-- Product Details informations -->
 										{$ASSOCIATED_PRODUCTS}
@@ -307,8 +334,8 @@ function getListOfRecords(obj, sModule, iId,sParentTab)
 			{/if}
 		</td></tr></table>
 </td></tr></table>
-									<!-- Inventory Actions - ends -->	
-									<td width=22% valign=top style="padding:10px;">
+									<!-- Inventory Actions - ends -->
+									<td width=22% valign=top style="padding:10px;" class="noprint">
 										<!-- right side InventoryActions -->
 										{include file="Inventory/InventoryActions.tpl"}
 
@@ -330,7 +357,7 @@ function getListOfRecords(obj, sModule, iId,sParentTab)
 								
 								<td class="dvtSelectedCellBottom" align=center nowrap>{$SINGLE_MOD|@getTranslatedString:$MODULE} {$APP.LBL_INFORMATION}</td>	
 								<td class="dvtTabCacheBottom" style="width:10px">&nbsp;</td>
-								{if $SinglePane_View eq 'false'}
+								{if $SinglePane_View eq 'false' && $IS_REL_LIST neq false && $IS_REL_LIST|@count > 0}
 								<td class="dvtUnSelectedCell" align=center nowrap><a href="index.php?action=CallRelatedList&module={$MODULE}&record={$ID}&parenttab={$CATEGORY}">{$APP.LBL_MORE} {$APP.LBL_INFORMATION}</a></td>
 								{/if}
 								<td class="dvtTabCacheBottom" align="right" style="width:100%">

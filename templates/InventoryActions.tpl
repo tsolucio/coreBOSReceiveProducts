@@ -237,9 +237,8 @@
 {* END *}
 <!-- Action links END -->
 
-
-<!-- Following condition is added to avoid the Tools section in Products and Vendors because we are not providing the Print and Email Now links throughout all the modules. when we provide these links we will remove this if condition -->
-{if $MODULE neq 'Products' && $MODULE neq 'Services' && $MODULE neq 'Vendors'}
+<!-- Following condition is added to avoid the Tools section in Products and Vendors -->
+{if $MODULE neq 'Products' && $MODULE neq 'Services' && $MODULE neq 'Vendors' && $MODULE neq 'PriceBooks'}
 
    <tr>
 	<td align="left">
@@ -271,29 +270,9 @@
 		<a href="javascript: document.DetailView.return_module.value='{$MODULE}'; document.DetailView.return_action.value='DetailView'; document.DetailView.module.value='{$MODULE}'; document.DetailView.action.value='SendPDFMail'; document.DetailView.record.value='{$ID}'; document.DetailView.return_id.value='{$ID}'; sendpdf_submit('{$PDFLANGUAGE}');" class="webMnu">{$APP.LBL_SEND_EMAIL_PDF}</a> 
 	</td>
  </tr>
-<tr>
- </tr>
 {/if}
 {/if}
-<!-- To display the Export To PDF link for PO, SO, Quotes and Invoice - ends -->
-
-   <!-- The following links are common to all the inventory modules -->
-<!--   <tr>
-	<td align="left" style="padding-left:10px;">
-		<img src="{'pointer.gif'|@vtiger_imageurl:$THEME}" hspace="5" align="absmiddle"/>
-		<a href="#" class="webMnu">Print</a> 
-	</td>
-   </tr>
-   <tr>
-	<td align="left" style="padding-left:10px;">
-		<img src="{'pointer.gif'|@vtiger_imageurl:$THEME}" hspace="5" align="absmiddle"/>
-		<a href="#" class="webMnu">Email Now </a> 
-	</td>
-   </tr>
--->
-
-{/if}
-<!-- Above if condition is added to avoid the Tools section in Products and Vendors because we are not providing the Print and Email Now links throughout all the modules. when we provide these links we will remove this if condition -->
+<!-- Above if condition is added to avoid the Tools section in Products and Vendors -->
 
 </table>
 

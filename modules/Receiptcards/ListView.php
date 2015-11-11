@@ -1,16 +1,15 @@
 <?php
-/*+********************************************************************************
- * The contents of this file are subject to the SugarCRM Public License Version 1.1.2
- * ("License"); You may not use this file except in compliance with the
- * License. You may obtain a copy of the License at http://www.sugarcrm.com/SPL
- * Software distributed under the License is distributed on an  "AS IS"  basis,
- * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License for
- * the specific language governing rights and limitations under the License.
- * The Original Code is:  SugarCRM Open Source
- * The Initial Developer of the Original Code is SugarCRM, Inc.
- * Portions created by SugarCRM are Copyright (C) SugarCRM, Inc.;
+/*+**********************************************************************************
+ * The contents of this file are subject to the vtiger CRM Public License Version 1.0
+ * ("License"); You may not use this file except in compliance with the License
+ * The Original Code is:  vtiger CRM Open Source
+ * The Initial Developer of the Original Code is vtiger.
+ * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
- ********************************************************************************/
+ ************************************************************************************/
+global $app_strings, $mod_strings, $current_language, $currentModule, $theme;
+global $list_max_entries_per_page;
+
 require_once('Smarty_setup.php');
 require_once("data/Tracker.php");
 require_once('modules/Receiptcards/Receiptcards.php');
@@ -18,9 +17,10 @@ require_once('include/logging.php');
 require_once('include/ListView/ListView.php');
 require_once('include/utils/utils.php');
 require_once('modules/CustomView/CustomView.php');
-require_once('include/database/Postgres8.php');
+require_once('include/DatabaseUtil.php');
 
-global $app_strings,$list_max_entries_per_page,$currentModule,$theme;
+checkFileAccess("modules/$currentModule/$currentModule.php");
+require_once("modules/$currentModule/$currentModule.php");
 
 $log = LoggerManager::getLogger('order_list');
 
@@ -52,13 +52,11 @@ if($_REQUEST['errormsg'] != '')
 {
         $smarty->assign("ERROR","");
 }
-//<<<<<<<<<<<<<<<<<<< sorting - stored in session >>>>>>>>>>>>>>>>>>>>
 $sorder = $focus->getSortOrder();
 $order_by = $focus->getOrderBy();
 
-$_SESSION['RECEIPTCARDS_ORDER_BY'] = $order_by;
-$_SESSION['RECEIPTCARDS_SORT_ORDER'] = $sorder;
-//<<<<<<<<<<<<<<<<<<< sorting - stored in session >>>>>>>>>>>>>>>>>>>>
+$_SESSION[$currentModule."_Order_By"] = $order_by;
+$_SESSION[$currentModule."_Sort_Order"]=$sorder;
 
 if(isset($_REQUEST['query']) && $_REQUEST['query'] == 'true')
 {
@@ -128,7 +126,6 @@ if($viewid != "0")
 {
 	$query = getListQuery("Receiptcards");
 }
-//<<<<<<<<customview>>>>>>>>>
 
 if(isset($where) && $where != '')
 {
@@ -155,11 +152,6 @@ if(isset($order_by) && $order_by != '')
                 $query .= ' ORDER BY '.$tablename.$order_by.' '.$sorder;
         }
 }
-
-//Postgres 8 fixes
-if( $adb->dbType == "pgsql")
-	$query = fixPostgresQuery( $query, $log, 0);
-
 
 if(PerformancePrefs::getBoolean('LISTVIEW_COMPUTE_PAGE_COUNT', false) === true){
 	$count_result = $adb->query( mkCountQuery( $query));
@@ -223,7 +215,7 @@ $_SESSION[$currentModule.'_listquery'] = $query;
 
 if(isset($_REQUEST['ajax']) && $_REQUEST['ajax'] != '')
 	$smarty->display("modules/Receiptcards/ListViewEntries.tpl");
-else	
+else
 	$smarty->display("modules/Receiptcards/ListView.tpl");
 
 ?>
