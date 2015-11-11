@@ -117,8 +117,13 @@ function displayCoords(currObj,obj,mode,curr_row)
 	<td class="dvInnerHeader" align="center" colspan="2">
 		<b>{$APP.LBL_TAX_MODE}</b>&nbsp;&nbsp;
 		<select id="taxtype" name="taxtype" onchange="decideTaxDiv(); calcTotal();">
-			<OPTION value="individual" selected>{$APP.LBL_INDIVIDUAL}</OPTION>
-			<OPTION value="group">{$APP.LBL_GROUP}</OPTION>
+			{if $TAX_TYPE eq 'group'}
+				<OPTION value="individual">{$APP.LBL_INDIVIDUAL}</OPTION>
+				<OPTION value="group" selected>{$APP.LBL_GROUP}</OPTION>
+			{else}
+				<OPTION value="individual" selected>{$APP.LBL_INDIVIDUAL}</OPTION>
+				<OPTION value="group">{$APP.LBL_GROUP}</OPTION>
+			{/if}
 		</select>
 	</td>
    </tr>
@@ -268,9 +273,13 @@ function displayCoords(currObj,obj,mode,curr_row)
    <!-- Add Product Button -->
    <tr>
 	<td colspan="3">
-			<input type="button" name="Button" class="crmbutton small create" value="{$APP.LBL_ADD_PRODUCT}" onclick="fnAddProductRowRI('{$MODULE}','{$IMAGE_PATH}');" />
-			&nbsp;&nbsp;
-			<input type="button" name="Button" class="crmbutton small create" value="{$APP.LBL_ADD_SERVICE}" onclick="fnAddServiceRowRI('{$MODULE}','{$IMAGE_PATH}');" />
+		{if 'Products'|vtlib_isModuleActive}
+		<input type="button" name="Button" class="crmbutton small create" value="{$APP.LBL_ADD_PRODUCT}" onclick="fnAddProductRowRI('{$MODULE}','{$IMAGE_PATH}');" />
+		{/if}
+		{if 'Services'|vtlib_isModuleActive}
+		&nbsp;&nbsp;
+		<input type="button" name="Button" class="crmbutton small create" value="{$APP.LBL_ADD_SERVICE}" onclick="fnAddServiceRowRI('{$MODULE}','{$IMAGE_PATH}');" />
+		{/if}
 	</td>
    </tr>
 

@@ -136,9 +136,9 @@ function sensex_info()
 									   <!-- included to handle the edit fields based on ui types -->
 									   {foreach key=header item=data from=$BLOCKS}
 									      <tr>
-        									  <td colspan=4 class="detailedViewHeader">
-        										  <b>{$header}</b>
-        									  </td>
+											<td colspan=4 class="detailedViewHeader">
+											<b>{$header}</b>
+										</td>
 									      </tr>
 
 										<!-- Handle the ui types display -->
