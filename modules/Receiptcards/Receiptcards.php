@@ -125,7 +125,7 @@ class Receiptcards extends CRMEntity {
 			if($_REQUEST['action'] != 'ReceiptcardsAjax' && $_REQUEST['ajxaction'] != 'DETAILVIEW' && $_REQUEST['action'] != 'MassEditSave')
 			{
 				//Based on the total Number of rows we will save the product relationship with this entity
-				saveReceiptcardsInventoryProductDetails(&$this, 'Receiptcards');
+				saveReceiptcardsInventoryProductDetails($this, 'Receiptcards');
 			}
 		}
 		// Update the currency id and the conversion rate for the invoice
@@ -541,12 +541,11 @@ class Receiptcards extends CRMEntity {
 		return parent::get_attachments($id, $cur_tab_id, $rel_tab_id, $actions);
 	}
 
-	}
+} // END OF CLASS
 
-	function getReceiptcardsInventoryTaxType($id) {
+function getReceiptcardsInventoryTaxType($id) {
 	global $log, $adb;
-	$log->debug(
-"Entering into function getReceiptcardsInventoryTaxType($id).");
+	$log->debug("Entering into function getReceiptcardsInventoryTaxType($id).");
 	$res = $adb->pquery("select taxtype from vtiger_receiptcards where receiptcardid=?", array($id));
 	$taxtype = $adb->query_result($res,0,'taxtype');
 	$log->debug("Exit from function getReceiptcardsInventoryTaxType($id).");
