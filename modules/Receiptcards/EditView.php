@@ -7,7 +7,6 @@
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
  ************************************************************************************/
-
 require_once ('Smarty_setup.php');
 require_once ('data/Tracker.php');
 require_once ('modules/Receiptcards/Receiptcards.php');
@@ -30,8 +29,7 @@ $smarty->assign("SEARCH", $searchurl);
 $currencyid = fetchCurrency($current_user->id);
 $rate_symbol = getCurrencySymbolandCRate($currencyid);
 $rate = $rate_symbol['rate'];
-if (isset ($_REQUEST['record']) && $_REQUEST['record'] != '') 
-{
+if (isset ($_REQUEST['record']) && $_REQUEST['record'] != '') {
 		$focus->id = $_REQUEST['record'];
 		$focus->mode = 'edit';
 		$focus->retrieve_entity_info($_REQUEST['record'], "Receiptcards");

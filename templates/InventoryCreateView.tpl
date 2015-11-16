@@ -1,5 +1,4 @@
 {*<!--
-
 /*********************************************************************************
 ** The contents of this file are subject to the vtiger CRM Public License Version 1.0
  * ("License"); You may not use this file except in compliance with the License
@@ -7,13 +6,8 @@
  * The Initial Developer of the Original Code is vtiger.
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
-*
  ********************************************************************************/
-
 -->*}
-
-{*<!-- module header -->*}
-
 <link rel="stylesheet" type="text/css" media="all" href="jscalendar/calendar-win2k-cold-1.css">
 <script type="text/javascript" src="jscalendar/calendar.js"></script>
 <script type="text/javascript" src="jscalendar/lang/calendar-{$CALENDAR_LANG}.js"></script>
@@ -193,6 +187,7 @@ function sensex_info()
 			   </tr>
 			</table>
 		</div>
+		{/foreach}
 	</td>
 	<td align=right valign=top><img src="{'showPanelTopRight.gif'|@vtiger_imageurl:$THEME}"></td>
    </tr>
@@ -203,15 +198,9 @@ function sensex_info()
 <div id="tax_container" style="display:none; position:absolute; z-index:1px;"></div>
 
 <script>
-
-
-
         var fieldname = new Array({$VALIDATION_DATA_FIELDNAME})
-
         var fieldlabel = new Array({$VALIDATION_DATA_FIELDLABEL})
-
         var fielddatatype = new Array({$VALIDATION_DATA_FIELDDATATYPE})
-
 	var product_labelarr = {ldelim}CLEAR_COMMENT:'{$APP.LBL_CLEAR_COMMENT}',
 				DISCOUNT:'{$APP.LBL_DISCOUNT}',
 				TOTAL_AFTER_DISCOUNT:'{$APP.LBL_TOTAL_AFTER_DISCOUNT}',
@@ -219,7 +208,6 @@ function sensex_info()
 				ZERO_DISCOUNT:'{$APP.LBL_ZERO_DISCOUNT}',
 				PERCENT_OF_PRICE:'{$APP.LBL_OF_PRICE}',
 				DIRECT_PRICE_REDUCTION:'{$APP.LBL_DIRECT_PRICE_REDUCTION}'{rdelim};
-
 </script>
 
 <!-- vtlib customization: Help information assocaited with the fields -->
@@ -249,10 +237,8 @@ function control_parent_id()
     if (fldId.value != oldcontrolvalue)
     {ldelim}
         if (fldId.value != "") addproducts(fldId.value);
-        
         oldcontrolvalue = fldId.value;
     {rdelim}
-
 {rdelim}
 
 function addproducts(parentid)
