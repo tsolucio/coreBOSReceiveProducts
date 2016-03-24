@@ -10,21 +10,13 @@
 -->*}
 
 <!-- Avoid this actions display for PriceBook module-->
-{if $MODULE neq 'PriceBooks'}
 
-
-<!-- Added this file to display the Inventory Actions based on the Inventory Modules -->
+<!-- display the Inventory Actions based on the Inventory Modules -->
 <table width="100%" border="0" cellpadding="5" cellspacing="0">
-   <tr>
-	<td>&nbsp;</td>
-   </tr>
 
-   <!-- This if condition is added to avoid display Tools heading because now there is no options in Tools. -->
-   {if $MODULE neq 'PurchaseOrder' && $MODULE neq 'Invoice'}
-   <tr>
+	<tr>
 	<td align="left" class="genHeaderSmall">{$APP.LBL_ACTIONS}</td>
-   </tr>
-   {/if}
+	</tr>
 
 	<!-- Module based actions starts -->
 	{if $MODULE eq 'Products' || $MODULE eq 'Services'}
@@ -283,7 +275,15 @@ function sendpdf_submit()
 	// Submit the form to get the attachment ready for submission
 	document.DetailView.submit();
 {/literal}
-	OpenCompose('{$INV_NO}','Invoice',{$ID});
+	{if $MODULE eq 'Invoice'}
+		OpenCompose('{$INV_NO}','Invoice:{'SINGLE_Invoice'|@getTranslatedString:$MODULE}',{$ID});
+	{elseif $MODULE eq 'Quotes'}
+		OpenCompose('{$QUO_NO}','Quote:{'SINGLE_Quotes'|@getTranslatedString:$MODULE}',{$ID});
+	{elseif $MODULE eq 'PurchaseOrder'}
+		OpenCompose('{$PO_NO}','PurchaseOrder:{'SINGLE_PurchaseOrder'|@getTranslatedString:$MODULE}',{$ID});
+	{elseif $MODULE eq 'SalesOrder'}
+		OpenCompose('{$SO_NO}','SalesOrder:{'SINGLE_SalesOrder'|@getTranslatedString:$MODULE}',{$ID});
+	{/if}
 {literal}
 }
 </script>

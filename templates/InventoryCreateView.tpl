@@ -32,25 +32,25 @@ function sensex_info()
         var Ticker = $('tickersymbol').value;
         if(Ticker!='')
         {ldelim}
-                $("vtbusy_info").style.display="inline";
-                new Ajax.Request(
-                      'index.php',
+		$("vtbusy_info").style.display="inline";
+		new Ajax.Request(
+          	      'index.php',
                       {ldelim}queue: {ldelim}position: 'end', scope: 'command'{rdelim},
-                                method: 'post',
-                                postBody: 'module={$MODULE}&action=Tickerdetail&tickersymbol='+Ticker,
-                                onComplete: function(response) {ldelim}
-                                        $('autocom').innerHTML = response.responseText;
-                                        $('autocom').style.display="block";
-                                        $("vtbusy_info").style.display="none";
-                                {rdelim}
-                        {rdelim}
-                );
+                      		method: 'post',
+                        	postBody: 'module={$MODULE}&action=Tickerdetail&tickersymbol='+Ticker,
+	                        onComplete: function(response) {ldelim}
+					$('autocom').innerHTML = response.responseText;
+				        $('autocom').style.display="block";
+        	                        $("vtbusy_info").style.display="none";
+                	        {rdelim}
+                	{rdelim}
+        	);
         {rdelim}
 {rdelim}
 
 </script>
 
-		{include file='Buttons_List1.tpl'}
+{include file='Buttons_List1.tpl'}
 
 {*<!-- Contents -->*}
 <table border=0 cellspacing=0 cellpadding=0 width=98% align=center>
@@ -60,11 +60,11 @@ function sensex_info()
 	</td>
 
 	<td class="showPanelBg" valign=top width=100%>
-		{*<!-- PUBLIC CONTENTS STARTS-->*}
-	<form id="frmEditView" name="EditView" method="POST" action="index.php" onSubmit="settotalnoofrows();calcTotal();VtigerJS_DialogBox.block();">
-  	<input type="hidden" name="hidImagePath" id="hidImagePath" value="{$IMAGE_PATH}"/>
+	     {*<!-- PUBLIC CONTENTS STARTS-->*}
+	 	 <form id="frmEditView" name="EditView" method="POST" action="index.php" onSubmit="settotalnoofrows();calcTotal();VtigerJS_DialogBox.block();">
+  	     <input type="hidden" name="hidImagePath" id="hidImagePath" value="{$IMAGE_PATH}"/>
        	 <input type="hidden" name="convertmode">
-	 <input type="hidden" name="pagenumber" value="{$smarty.request.start|@vtlib_purify}">
+		 <input type="hidden" name="pagenumber" value="{$smarty.request.start|@vtlib_purify}">
          <input type="hidden" name="module" value="{$MODULE}">
          <input type="hidden" name="record" value="{$ID}">
          <input type="hidden" name="mode" value="{$MODE}">
@@ -74,13 +74,14 @@ function sensex_info()
          <input type="hidden" name="return_id" value="{$RETURN_ID}">
          <input type="hidden" name="return_action" value="{$RETURN_ACTION}">
          <input type="hidden" name="return_viewname" value="{$RETURN_VIEWNAME}">
-		<div class="small" style="padding:20px">
-
-			{if $OP_MODE eq 'edit_view'}
+		
+	     <div class="small" style="padding:20px">
+		
+		 {if $OP_MODE eq 'edit_view'}
 			 <span class="lvtHeaderText"><font color="purple">[ {$ID} ] </font>{$NAME} -  {$APP.LBL_EDITING} {$SINGLE_MOD|@getTranslatedString:$MODULE} {$APP.LBL_INFORMATION}</span> <br>
-				{$UPDATEINFO}
-			{/if}
-			{if $OP_MODE eq 'create_view'}
+			{$UPDATEINFO}	 
+		 {/if}
+		 {if $OP_MODE eq 'create_view'}
 			{if $DUPLICATE neq 'true'}
 			<span class="lvtHeaderText">{$APP.LBL_CREATING} {$APP.LBL_NEW} {$SINGLE_MOD|@getTranslatedString:$MODULE}</span> <br>
 			{else}
@@ -124,22 +125,22 @@ function sensex_info()
 					<td align=left>
 					<!-- content cache -->
 
-							<table border=0 cellspacing=0 cellpadding=0 width=100%>
-							   <tr>
-								<td id ="autocom"></td>
-							   </tr>
-							   <tr>
-								<td style="padding:10px">
-								<!-- General details -->
-									<table border=0 cellspacing=0 cellpadding=0 width=100% class="small">
-									   <tr>
-										<td  colspan=4 style="padding:5px">
-										   <div align="center">
+						<table border=0 cellspacing=0 cellpadding=0 width=100%>
+						   <tr>
+							<td id ="autocom"></td>
+						   </tr>
+						   <tr>
+							<td style="padding:10px">
+							<!-- General details -->
+								<table border=0 cellspacing=0 cellpadding=0 width=100% class="small">
+								   <tr>
+									<td  colspan=4 style="padding:5px">
+									   <div align="center">
 										<input title="{$APP.LBL_SAVE_BUTTON_TITLE}" accessKey="{$APP.LBL_SAVE_BUTTON_KEY}" class="crmbutton small save" onclick="this.form.action.value='Save';  return validateInventory('{$MODULE}')" type="submit" name="button" value="  {$APP.LBL_SAVE_BUTTON_LABEL}  " style="width:70px" >
                                                                  		<input title="{$APP.LBL_CANCEL_BUTTON_TITLE}" accessKey="{$APP.LBL_CANCEL_BUTTON_KEY}" class="crmbutton small cancel" onclick="window.history.back()" type="button" name="button" value="  {$APP.LBL_CANCEL_BUTTON_LABEL}  " style="width:70px">
-										   </div>
-										</td>
-									   </tr>
+									   </div>
+									</td>
+								   </tr>
 
 								   {foreach key=header item=data from=$blockInfo}
 								   <tr>
@@ -149,10 +150,10 @@ function sensex_info()
 								   </tr>
 
 								   <!-- Here we should include the uitype handlings-->
-										{include file="DisplayFields.tpl"}
+								   {include file="DisplayFields.tpl"}
 
-									      <tr style="height:25px"><td>&nbsp;</td></tr>
-									   {/foreach}
+								   <tr style="height:25px"><td>&nbsp;</td></tr>
+								   {/foreach}
 
 								   <!-- This if is added to restrict display in more tab-->
 								   {if $divName eq 'basicTab'}
@@ -164,30 +165,32 @@ function sensex_info()
 										{include file="modules/Receiptcards/ProductDetails.tpl"}
 									{/if}
 								   {/if}
-									   <tr>
-										<td  colspan=4 style="padding:5px">
-											<div align="center">
+
+								   <tr>
+									<td  colspan=4 style="padding:5px">
+									   <div align="center">
 										<input title="{$APP.LBL_SAVE_BUTTON_TITLE}" accessKey="{$APP.LBL_SAVE_BUTTON_KEY}" class="crmbutton small save" onclick="this.form.action.value='Save'; return validateInventory('{$MODULE}')" type="submit" name="button" value="  {$APP.LBL_SAVE_BUTTON_LABEL}  " style="width:70px" >
-												<input title="{$APP.LBL_CANCEL_BUTTON_TITLE}" accessKey="{$APP.LBL_CANCEL_BUTTON_KEY}" class="crmbutton small cancel" onclick="window.history.back()" type="button" name="button" value="  {$APP.LBL_CANCEL_BUTTON_LABEL}  " style="width:70px">
+										<input title="{$APP.LBL_CANCEL_BUTTON_TITLE}" accessKey="{$APP.LBL_CANCEL_BUTTON_KEY}" class="crmbutton small cancel" onclick="window.history.back()" type="button" name="button" value="  {$APP.LBL_CANCEL_BUTTON_LABEL}  " style="width:70px">
 										<input type="hidden" name="convert_from" value="{$CONVERT_MODE}">
                                                                                 <input type="hidden" name="duplicate_from" value="{$DUPLICATE_FROM}">
-											</div>
-										</td>
-									   </tr>
-									</table>
+									   </div>
+									</td>
+								   </tr>
+								</table>
 								<!-- General details - end -->
-								</td>
-							   </tr>
-							</table>
-						</td>
-					   </tr>
-					</table>
-
-				</td>
-			   </tr>
-			</table>
-		</div>
-		{/foreach}
+							</td>
+						   </tr>
+						</table>
+					</td>
+				   </tr>
+				</table>
+							
+			    </div>
+			    {/foreach}
+			</td>
+		   </tr>
+		</table>
+	 </div>
 	</td>
 	<td align=right valign=top><img src="{'showPanelTopRight.gif'|@vtiger_imageurl:$THEME}"></td>
    </tr>

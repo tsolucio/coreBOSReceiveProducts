@@ -151,7 +151,6 @@ function getListOfRecords(obj, sModule, iId,sParentTab)
    						<table border=0 cellspacing=0 cellpadding=3 width=100% class="small">
 						   <tr>
 								<td class="dvtTabCache" style="width:10px" nowrap>&nbsp;</td>
-								
 								<td class="dvtSelectedCell" align=center nowrap>{$SINGLE_MOD|@getTranslatedString:$MODULE} {$APP.LBL_INFORMATION}</td>
 								<td class="dvtTabCache" style="width:10px">&nbsp;</td>
 								{if $SinglePane_View eq 'false' && $IS_REL_LIST neq false && $IS_REL_LIST|@count > 0}
@@ -301,9 +300,9 @@ function getListOfRecords(obj, sModule, iId,sParentTab)
 {if $CUSTOM_LINKS && !empty($CUSTOM_LINKS.DETAILVIEWWIDGET)}
 {foreach item=CUSTOM_LINK_DETAILVIEWWIDGET from=$CUSTOM_LINKS.DETAILVIEWWIDGET}
 	{if preg_match("/^block:\/\/.*/", $CUSTOM_LINK_DETAILVIEWWIDGET->linkurl)}
-		 {if ($smarty.foreach.BLOCKS.first && $CUSTOM_LINK_DETAILVIEWWIDGET->sequence <= 1) 
-		 	|| ($CUSTOM_LINK_DETAILVIEWWIDGET->sequence == $smarty.foreach.BLOCKS.iteration + 1)
-		 	|| ($smarty.foreach.BLOCKS.last && $CUSTOM_LINK_DETAILVIEWWIDGET->sequence >= $smarty.foreach.BLOCKS.iteration + 1)}
+		{if ($smarty.foreach.BLOCKS.first && $CUSTOM_LINK_DETAILVIEWWIDGET->sequence <= 1)
+			|| ($CUSTOM_LINK_DETAILVIEWWIDGET->sequence == $smarty.foreach.BLOCKS.iteration + 1)
+			|| ($smarty.foreach.BLOCKS.last && $CUSTOM_LINK_DETAILVIEWWIDGET->sequence >= $smarty.foreach.BLOCKS.iteration + 1)}
 		<br>
 		{php}
 			echo vtlib_process_widget($this->_tpl_vars['CUSTOM_LINK_DETAILVIEWWIDGET'], $this->_tpl_vars);
@@ -407,18 +406,18 @@ function getTagCloud()
 {ldelim}
 	var obj = $("tagfields");
 	if(obj != null && typeof(obj) != undefined) {ldelim}
-		new Ajax.Request(
-        	'index.php',
-        	{ldelim}queue: {ldelim}position: 'end', scope: 'command'{rdelim},
-      		method: 'post',
-			postBody: 'module={$MODULE}&action={$MODULE}Ajax&file=TagCloud&ajxaction=GETTAGCLOUD&recordid={$ID}',
-			onComplete: function(response) {ldelim}
-							$("tagfields").innerHTML=response.responseText;
-                            $("txtbox_tagfields").value ='';
+new Ajax.Request(
+        'index.php',
+        {ldelim}queue: {ldelim}position: 'end', scope: 'command'{rdelim},
+        method: 'post',
+        postBody: 'module={$MODULE}&action={$MODULE}Ajax&file=TagCloud&ajxaction=GETTAGCLOUD&recordid={$ID}',
+        onComplete: function(response) {ldelim}
+                                $("tagfields").innerHTML=response.responseText;
+                                $("txtbox_tagfields").value ='';
                         {rdelim}
-        	{rdelim}
-		);
-	{rdelim}
+        {rdelim}
+);
+{rdelim}
 {rdelim}
 getTagCloud();
 </script>
