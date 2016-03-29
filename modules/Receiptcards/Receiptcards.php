@@ -450,6 +450,11 @@ class Receiptcards extends CRMEntity {
 	function vtlib_handler($modulename, $event_type) {
 		if($event_type == 'module.postinstall') {
 			// TODO Handle post installation actions
+			$modAccounts=Vtiger_Module::getInstance('Accounts');
+			$modContacts=Vtiger_Module::getInstance('Contacts');
+			$modRC=Vtiger_Module::getInstance('Receiptcards');
+			if ($modAccounts) $modAccounts->setRelatedList($modRC, 'Receiptcards', Array('ADD'),'get_dependents_list');
+			if ($modContacts) $modContacts->setRelatedList($modRC, 'Receiptcards', Array('ADD'),'get_dependents_list');
 			$this->setModuleSeqNumber('configure', $modulename, 'RECM-', '0000001');
 		} else if($event_type == 'module.disabled') {
 			// TODO Handle actions when this module is disabled.
