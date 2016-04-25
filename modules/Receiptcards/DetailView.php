@@ -249,7 +249,7 @@ function getReceiptcardsDetailAssociatedProducts($focus)
 		$sc_image_tag = '';
 		if ($entitytype == 'Services') {
 			$sc_image_tag = '<a href="index.php?module=ServiceContracts&action=EditView&service_id='.$productid.'&return_module=Receiptcards&return_id='.$focus->id.'">' .
-						'<img border="0" src="'.vtiger_imageurl('handshake.png', $theme).'" title="'. getTranslatedString('Add Service Contract').'" style="cursor: pointer;" align="absmiddle" />' .
+						'<img border="0" src="'.vtiger_imageurl('handshake.gif', $theme).'" title="'. getTranslatedString('Add Service Contract').'" style="cursor: pointer;" align="absmiddle" />' .
 						'</a>';
 		}
 		
