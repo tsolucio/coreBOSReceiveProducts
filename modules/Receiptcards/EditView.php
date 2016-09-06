@@ -210,6 +210,10 @@ if ($focus->mode == 'edit' || $_REQUEST['isDuplicate'] == 'true') {
 $check_button = Button_Check($module);
 $smarty->assign("CHECK", $check_button);
 $smarty->assign("DUPLICATE",vtlib_purify($_REQUEST['isDuplicate']));
+//Get Service or Product by default when create
+$smarty->assign('PRODUCT_OR_SERVICE', GlobalVariable::getVariable('product_service_default', 'Products', $currentModule, $current_user->id));
+//Set taxt type group or individual by default when create
+$smarty->assign('TAX_TYPE', GlobalVariable::getVariable('Tax_Type_Default', 'individual', $currentModule, $current_user->id));
 if ($focus->mode == 'edit')
 	$smarty->display("modules/Receiptcards/InventoryEditView.tpl");
 else
