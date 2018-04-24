@@ -106,6 +106,26 @@
 <displaytype>1</displaytype>
 <info_type>BAS</info_type>
 <helpinfo><![CDATA[]]></helpinfo>
+<masseditable>1</masseditable>
+</field>
+<field>
+<fieldname>created_user_id</fieldname>
+<uitype>52</uitype>
+<columnname>smcreatorid</columnname>
+<tablename>vtiger_crmentity</tablename>
+<generatedtype>1</generatedtype>
+<fieldlabel>Created By</fieldlabel>
+<readonly>1</readonly>
+<presence>0</presence>
+<selected>0</selected>
+<sequence>23</sequence>
+<maximumlength>100</maximumlength>
+<typeofdata>V~O</typeofdata>
+<quickcreate>3</quickcreate>
+<quickcreatesequence>1</quickcreatesequence>
+<displaytype>2</displaytype>
+<info_type>BAS</info_type>
+<helpinfo><![CDATA[]]></helpinfo>
 <masseditable>0</masseditable>
 </field>
 <field>
@@ -121,7 +141,7 @@
 <sequence>21</sequence>
 <maximumlength>100</maximumlength>
 <typeofdata>DT~O</typeofdata>
-<quickcreate>1</quickcreate>
+<quickcreate>3</quickcreate>
 <quickcreatesequence></quickcreatesequence>
 <displaytype>2</displaytype>
 <info_type>BAS</info_type>
@@ -141,7 +161,7 @@
 <sequence>22</sequence>
 <maximumlength>100</maximumlength>
 <typeofdata>DT~O</typeofdata>
-<quickcreate>1</quickcreate>
+<quickcreate>3</quickcreate>
 <quickcreatesequence></quickcreatesequence>
 <displaytype>2</displaytype>
 <info_type>BAS</info_type>

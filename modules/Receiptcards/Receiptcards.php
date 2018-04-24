@@ -7,95 +7,99 @@
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
  ************************************************************************************/
-require_once('data/CRMEntity.php');
-require_once('data/Tracker.php');
+require_once 'data/CRMEntity.php';
+require_once 'data/Tracker.php';
 
 class Receiptcards extends CRMEntity {
-	var $db, $log; // Used in class functions of CRMEntity
+	public $db;
+	public $log;
 
-	var $table_name = 'vtiger_receiptcards';
-	var $table_index= 'receiptcardid';
-	var $column_fields = Array();
+	public $table_name = 'vtiger_receiptcards';
+	public $table_index= 'receiptcardid';
+	public $column_fields = array();
 
 	/** Indicator if this is a custom module or standard module */
-	var $IsCustomModule = true;
-	var $HasDirectImageField = false;
+	public $IsCustomModule = true;
+	public $HasDirectImageField = false;
 	/**
 	 * Mandatory table for supporting custom fields.
 	 */
-	var $customFieldTable = Array('vtiger_receiptcardscf', 'receiptcardid');
+	public $customFieldTable = array('vtiger_receiptcardscf', 'receiptcardid');
 
 	/**
 	 * Mandatory for Saving, Include tables related to this module.
 	 */
-	var $tab_name = Array('vtiger_crmentity', 'vtiger_receiptcards', 'vtiger_receiptcardscf');
+	public $tab_name = array('vtiger_crmentity', 'vtiger_receiptcards', 'vtiger_receiptcardscf');
 
 	/**
 	 * Mandatory for Saving, Include tablename and tablekey columnname here.
 	 */
-	var $tab_name_index = Array(
+	public $tab_name_index = array(
 		'vtiger_crmentity' => 'crmid',
 		'vtiger_receiptcards'   => 'receiptcardid',
-		'vtiger_receiptcardscf' => 'receiptcardid');
+		'vtiger_receiptcardscf' => 'receiptcardid',
+	);
 
 	/**
 	 * Mandatory for Listing (Related listview)
 	 */
-	var $list_fields = Array (
-		/* Format: Field Label => Array(tablename => columnname) */
+	public $list_fields = array(
+		/* Format: Field Label => array(tablename => columnname) */
 		// tablename should not have prefix 'vtiger_'
-		'Receiptcards No'=> Array('project' => 'receiptcards_no'),
-		'Assigned To' => Array('crmentity' => 'smownerid')
+		'Receiptcards No'=> array('project' => 'receiptcards_no'),
+		'Assigned To' => array('crmentity' => 'smownerid')
 	);
-	var $list_fields_name = Array(
+	public $list_fields_name = array(
 		/* Format: Field Label => fieldname */
 		'Receiptcards No'=> 'receiptcards_no',
 		'Assigned To' => 'assigned_user_id'
 	);
 
 	// Make the field link to detail view from list view (Fieldname)
-	var $list_link_field = 'receiptcards_no';
+	public $list_link_field = 'receiptcards_no';
 
 	// For Popup listview and UI type support
-	var $search_fields = Array(
-		/* Format: Field Label => Array(tablename => columnname) */
+	public $search_fields = array(
+		/* Format: Field Label => array(tablename => columnname) */
 		// tablename should not have prefix 'vtiger_'
-		'Receiptcards No'=> Array('receiptcards' => 'receiptcards_no')
+		'Receiptcards No'=> array('receiptcards' => 'receiptcards_no')
 	);
-	var $search_fields_name = Array(
+	public $search_fields_name = array(
 		/* Format: Field Label => fieldname */
 		'Receiptcards No'=> 'receiptcards_no'
 	);
 
 	// For Popup window record selection
-	var $popup_fields = Array('receiptcards_no', 'startdate');
+	public $popup_fields = array('receiptcards_no', 'startdate');
 
 	// Placeholder for sort fields - All the fields will be initialized for Sorting through initSortFields
-	var $sortby_fields = Array();
+	public $sortby_fields = array();
 
 	// For Alphabetical search
-	var $def_basicsearch_col = 'receiptcards_no';
+	public $def_basicsearch_col = 'receiptcards_no';
 
 	// Column value to use on detail view record text display
-	var $def_detailview_recname = 'receiptcards_no';
+	public $def_detailview_recname = 'receiptcards_no';
 
 	// Required Information for enabling Import feature
-	var $required_fields = Array('receiptcards_no'=>1);
+	public $required_fields = array('receiptcards_no'=>1);
 
 	// Callback function list during Importing
-	var $special_functions = Array('set_import_assigned_user');
+	public $special_functions = array('set_import_assigned_user');
 
-	var $default_order_by = 'receiptcards_no';
-	var $default_sort_order='ASC';
+	public $default_order_by = 'receiptcards_no';
+	public $default_sort_order='ASC';
 	// Used when enabling/disabling the mandatory fields for the module.
 	// Refers to vtiger_field.fieldname values.
-	var $mandatory_fields = Array('createdtime', 'modifiedtime', 'receiptcards_no');
+	public $mandatory_fields = array('createdtime', 'modifiedtime', 'receiptcards_no');
 
-	function save_module($module) {
+	public function save_module($module) {
+		if ($this->HasDirectImageField) {
+			$this->insertIntoAttachment($this->id, $module);
+		}
 		//in ajax save we should not call this function, because this will delete all the existing product values
-		if(isset($_REQUEST)) {
-			if($_REQUEST['action'] != 'ReceiptcardsAjax' && $_REQUEST['ajxaction'] != 'DETAILVIEW' && $_REQUEST['action'] != 'MassEditSave')
-			{
+		if (isset($_REQUEST)) {
+			if ($_REQUEST['action'] != 'ReceiptcardsAjax' && $_REQUEST['ajxaction'] != 'DETAILVIEW' && $_REQUEST['action'] != 'MassEditSave') {
 				//Based on the total Number of rows we will save the product relationship with this entity
 				saveReceiptcardsInventoryProductDetails($this, 'Receiptcards');
 			}
@@ -106,7 +110,7 @@ class Receiptcards extends CRMEntity {
 		$this->db->pquery($update_query, $update_params);
 	}
 
-	function restore($module, $id) {
+	public function restore($module, $id) {
 		global $current_user;
 
 		$this->db->println("TRANS restore starts $module");
@@ -132,50 +136,50 @@ class Receiptcards extends CRMEntity {
 	 * @param String Module name
 	 * @param String Event Type (module.postinstall, module.disabled, module.enabled, module.preuninstall)
 	 */
-	function vtlib_handler($modulename, $event_type) {
-		if($event_type == 'module.postinstall') {
+	public function vtlib_handler($modulename, $event_type) {
+		if ($event_type == 'module.postinstall') {
 			// TODO Handle post installation actions
 			$modAccounts=Vtiger_Module::getInstance('Accounts');
 			$modContacts=Vtiger_Module::getInstance('Contacts');
 			$modRC=Vtiger_Module::getInstance('Receiptcards');
-			if ($modAccounts) $modAccounts->setRelatedList($modRC, 'Receiptcards', Array('ADD'),'get_dependents_list');
-			if ($modContacts) $modContacts->setRelatedList($modRC, 'Receiptcards', Array('ADD'),'get_dependents_list');
+			if ($modAccounts) $modAccounts->setRelatedList($modRC, 'Receiptcards', array('ADD'),'get_dependents_list');
+			if ($modContacts) $modContacts->setRelatedList($modRC, 'Receiptcards', array('ADD'),'get_dependents_list');
 			$this->setModuleSeqNumber('configure', $modulename, 'RECM-', '0000001');
-		} else if($event_type == 'module.disabled') {
+		} elseif ($event_type == 'module.disabled') {
 			// TODO Handle actions when this module is disabled.
-		} else if($event_type == 'module.enabled') {
+		} elseif ($event_type == 'module.enabled') {
 			// TODO Handle actions when this module is enabled.
-		} else if($event_type == 'module.preuninstall') {
+		} elseif ($event_type == 'module.preuninstall') {
 			// TODO Handle actions when this module is about to be deleted.
-		} else if($event_type == 'module.preupdate') {
+		} elseif ($event_type == 'module.preupdate') {
 			// TODO Handle actions before this module is updated.
-		} else if($event_type == 'module.postupdate') {
+		} elseif ($event_type == 'module.postupdate') {
 			// TODO Handle actions after this module is updated.
 		}
 	}
 
 	/**
-	 * Handle getting related list information.
+	 * Handle saving related module information.
 	 * NOTE: This function has been added to CRMEntity (base class).
 	 * You can override the behavior by re-defining it here.
 	 */
-	//function get_related_list($id, $cur_tab_id, $rel_tab_id, $actions=false) { }
+	// public function save_related_module($module, $crmid, $with_module, $with_crmid) { }
 
 	/**
-	 * Handle getting dependents list information.
+	 * Handle deleting related module information.
 	 * NOTE: This function has been added to CRMEntity (base class).
 	 * You can override the behavior by re-defining it here.
 	 */
-	//function get_dependents_list($id, $cur_tab_id, $rel_tab_id, $actions=false) { }
+	//public function delete_related_module($module, $crmid, $with_module, $with_crmid) { }
 
- /**
+	/**
 	 * Here we override the parent's method,
 	 * This is done because the related lists for this module use a custom query
 	 * that queries the child module's table (column of the uitype10 field)
 	 *
 	 * @see data/CRMEntity#save_related_module($module, $crmid, $with_module, $with_crmid)
 	 */
-	function save_related_module($module, $crmid, $with_module, $with_crmid) {
+	public function save_related_module($module, $crmid, $with_module, $with_crmid) {
 		if (!in_array($with_module, array('Deadline', 'Operation'))) {
 			parent::save_related_module($module, $crmid, $with_module, $with_crmid);
 			return;
@@ -192,7 +196,7 @@ class Receiptcards extends CRMEntity {
 		//update the child elements' column value for uitype10
 		$destinationModule = vtlib_purify($_REQUEST['destination_module']);
 		if (!is_array($with_crmid))
-			$with_crmid = Array($with_crmid);
+			$with_crmid = array($with_crmid);
 		foreach ($with_crmid as $relcrmid) {
 			$child = CRMEntity::getInstance($destinationModule);
 			$child->retrieve_entity_info($relcrmid, $destinationModule);
@@ -209,14 +213,14 @@ class Receiptcards extends CRMEntity {
 	 *
 	 * @see data/CRMEntity#delete_related_module($module, $crmid, $with_module, $with_crmid)
 	 */
-	function delete_related_module($module, $crmid, $with_module, $with_crmid) {
+	public function delete_related_module($module, $crmid, $with_module, $with_crmid) {
 		if (!in_array($with_module, array('Deadline', 'Operation'))) {
 			parent::delete_related_module($module, $crmid, $with_module, $with_crmid);
 			return;
 		}
 		$destinationModule = vtlib_purify($_REQUEST['destination_module']);
 		if (!is_array($with_crmid))
-			$with_crmid = Array($with_crmid);
+			$with_crmid = array($with_crmid);
 		foreach ($with_crmid as $relcrmid) {
 			$child = CRMEntity::getInstance($destinationModule);
 			$child->retrieve_entity_info($relcrmid, $destinationModule);
@@ -279,7 +283,7 @@ function saveReceiptcardsInventoryProductDetails($focus, $module, $update_prod_s
 		$id=$_REQUEST['duplicate_from'];
 	}
 
-	$ext_prod_arr = Array();
+	$ext_prod_arr = array();
 	if($focus->mode == 'edit')
 	{
 		if($_REQUEST['taxtype'] == 'group')
@@ -418,7 +422,7 @@ function saveReceiptcardsInventoryProductDetails($focus, $module, $update_prod_s
 	$updatequery .= " total=?";
 	array_push($updateparams, $total);
 
-	//$id_array = Array('PurchaseOrder'=>'purchaseorderid','SalesOrder'=>'salesorderid','Quotes'=>'quoteid','Invoice'=>'invoiceid');
+	//$id_array = array('PurchaseOrder'=>'purchaseorderid','SalesOrder'=>'salesorderid','Quotes'=>'quoteid','Invoice'=>'invoiceid');
 	//Added where condition to which entity we want to update these values
 	$updatequery .= " where ".$focus->table_index."=?";
 	array_push($updateparams, $focus->id);

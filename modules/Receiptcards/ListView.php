@@ -8,19 +8,18 @@
  * All Rights Reserved.
  ************************************************************************************/
 global $app_strings, $mod_strings, $current_language, $currentModule, $theme;
-global $list_max_entries_per_page;
-
-require_once('Smarty_setup.php');
+$list_max_entries_per_page = GlobalVariable::getVariable('Application_ListView_PageSize', 20, $currentModule);
+require_once 'Smarty_setup.php';
+require_once 'include/ListView/ListView.php';
+require_once 'modules/CustomView/CustomView.php';
+require_once 'include/DatabaseUtil.php';
 require_once("data/Tracker.php");
 require_once('modules/Receiptcards/Receiptcards.php');
 require_once('include/logging.php');
-require_once('include/ListView/ListView.php');
 require_once('include/utils/utils.php');
-require_once('modules/CustomView/CustomView.php');
-require_once('include/DatabaseUtil.php');
 
-checkFileAccess("modules/$currentModule/$currentModule.php");
-require_once("modules/$currentModule/$currentModule.php");
+checkFileAccessForInclusion("modules/$currentModule/$currentModule.php");
+require_once "modules/$currentModule/$currentModule.php";
 
 $log = LoggerManager::getLogger('order_list');
 
@@ -33,10 +32,9 @@ $focus = new Receiptcards();
 $focus->initSortbyField('Receiptcards');
 // END
 $smarty = new vtigerCRM_Smarty;
-$other_text = Array();
+$other_text = array();
 
-if(!$_SESSION['lvs'][$currentModule])
-{
+if (!$_SESSION['lvs'][$currentModule]) {
 	unset($_SESSION['lvs']);
 	$modObj = new ListViewSession();
 	$modObj->sorder = $sorder;
@@ -44,13 +42,11 @@ if(!$_SESSION['lvs'][$currentModule])
 	$_SESSION['lvs'][$currentModule] = get_object_vars($modObj);
 }
 
-if($_REQUEST['errormsg'] != '')
-{
-        $errormsg = vtlib_purify($_REQUEST['errormsg']);
-        $smarty->assign("ERROR","The User does not have permission to Change/Delete ".$errormsg." ".$currentModule);
-}else
-{
-        $smarty->assign("ERROR","");
+if ($_REQUEST['errormsg'] != '') {
+	$errormsg = vtlib_purify($_REQUEST['errormsg']);
+	$smarty->assign("ERROR", "The User does not have permission to Change/Delete ".$errormsg." ".$currentModule);
+} else {
+	$smarty->assign("ERROR","");
 }
 $sorder = $focus->getSortOrder();
 $order_by = $focus->getOrderBy();
@@ -58,14 +54,12 @@ $order_by = $focus->getOrderBy();
 $_SESSION[$currentModule."_Order_By"] = $order_by;
 $_SESSION[$currentModule."_Sort_Order"]=$sorder;
 
-if(isset($_REQUEST['query']) && $_REQUEST['query'] == 'true')
-{
+if (isset($_REQUEST['query']) && $_REQUEST['query'] == 'true') {
 	list($where, $ustring) = split("#@@#",getWhereCondition($currentModule));
 	// we have a query
 	$url_string .="&query=true".$ustring;
 	$log->info("Here is the where clause for the list view: $where");
 	$smarty->assign("SEARCH_URL",$url_string);
-				
 }
 
 //<<<<cutomview>>>>>>>
@@ -197,8 +191,6 @@ $smarty->assign("CURRENT_PAGE_BOXES", implode(array_keys($listview_entries),";")
 $navigationOutput = getTableHeaderSimpleNavigation($navigation_array, $url_string,"Receiptcards","index",$viewid);
 $alphabetical = AlphabeticalSearch($currentModule,'index','subject','true','basic',"","","","",$viewid);
 $fieldnames = getAdvSearchfields($module);
-$criteria = getcriteria_options();
-$smarty->assign("CRITERIA", $criteria);
 $smarty->assign("FIELDNAMES", $fieldnames);
 $smarty->assign("CUSTOMVIEW_OPTION",$customviewcombo_html);
 $smarty->assign("VIEWID", $viewid);
@@ -213,9 +205,9 @@ $smarty->assign("CHECK", $check_button);
 
 $_SESSION[$currentModule.'_listquery'] = $query;
 
-if(isset($_REQUEST['ajax']) && $_REQUEST['ajax'] != '')
+if (isset($_REQUEST['ajax']) && $_REQUEST['ajax'] != '') {
 	$smarty->display("modules/Receiptcards/ListViewEntries.tpl");
-else
+} else {
 	$smarty->display("modules/Receiptcards/ListView.tpl");
-
+}
 ?>

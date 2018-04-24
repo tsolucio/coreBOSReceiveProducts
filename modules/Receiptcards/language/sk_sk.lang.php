@@ -7,7 +7,7 @@
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
  ************************************************************************************/
-$mod_strings = Array(
+$mod_strings = array(
 	'LBL_MODULE_NAME'=>'Prijemky',
 	'LBL_MODULE_TITLE'=>'Príjemky',
 	'LBL_NEW_RECEIPTCARDS'=>'Nová príjemka',

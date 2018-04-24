@@ -7,7 +7,7 @@
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
  ************************************************************************************/
-$mod_strings = Array(
+$mod_strings = array(
 	'Receiptcards' => 'Receipt Cards',
 	'SINGLE_Receiptcards' => 'Receipt Card',
 	'Receiptcards ID' => 'Receipt Cards ID',
