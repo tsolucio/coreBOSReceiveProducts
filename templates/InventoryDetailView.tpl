@@ -1,5 +1,4 @@
 {*<!--
-
 /*********************************************************************************
 ** The contents of this file are subject to the vtiger CRM Public License Version 1.0
  * ("License"); You may not use this file except in compliance with the License
@@ -7,47 +6,18 @@
  * The Initial Developer of the Original Code is vtiger.
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
-*
  ********************************************************************************/
-
 -->*}
-<script language="JavaScript" type="text/javascript" src="include/js/dtlviewajax.js"></script>
-<script src="include/scriptaculous/scriptaculous.js" type="text/javascript"></script>
-<div id="convertleaddiv" style="display:block;position:absolute;left:225px;top:150px;"></div>
+<script type="text/javascript" src="include/js/dtlviewajax.js"></script>
 <span id="crmspanid" style="display:none;position:absolute;"  onmouseover="show('crmspanid');">
-   <a class="link"  align="right" href="javascript:;">{$APP.LBL_EDIT_BUTTON}</a>
+	<a class="link" href="javascript:;">{$APP.LBL_EDIT_BUTTON}</a>
 </span>
+<div id="convertleaddiv" style="display:block;position:absolute;left:225px;top:150px;"></div>
 <script>
-function tagvalidate()
-{ldelim}
-	if(trim(document.getElementById('txtbox_tagfields').value) != '')
-		SaveTag('txtbox_tagfields','{$ID}','{$MODULE}');	
-	else
-	{ldelim}
-		alert("{$APP.PLEASE_ENTER_TAG}");
-		return false;
-	{rdelim}
-{rdelim}
-function DeleteTag(id,recordid)
-{ldelim}
-	$("vtbusy_info").style.display="inline";
-	Effect.Fade('tag_'+id);
-	new Ajax.Request(
-		'index.php',
-                {ldelim}queue: {ldelim}position: 'end', scope: 'command'{rdelim},
-                        method: 'post',
-                        postBody: "file=TagCloud&module={$MODULE}&action={$MODULE}Ajax&ajxaction=DELETETAG&recordid="+recordid+"&tagid=" +id,
-                        onComplete: function(response) {ldelim}
-						getTagCloud();
-						$("vtbusy_info").style.display="none";
-                        {rdelim}
-                {rdelim}
-        );
-{rdelim}
 {literal}
 function showHideStatus(sId,anchorImgId,sImagePath)
 {
-	oObj = eval(document.getElementById(sId));
+	oObj = document.getElementById(sId);
 	if(oObj.style.display == 'block')
 	{
 		oObj.style.display = 'none';
@@ -63,65 +33,81 @@ function showHideStatus(sId,anchorImgId,sImagePath)
 		eval(document.getElementById(anchorImgId)).title = 'Hide';
 	}
 }
-function setCoOrdinate(elemId)
-{
+function setCoOrdinate(elemId){
 	oBtnObj = document.getElementById(elemId);
 	var tagName = document.getElementById('lstRecordLayout');
 	leftpos  = 0;
 	toppos = 0;
 	aTag = oBtnObj;
-	do 
-	{					  
-	  leftpos  += aTag.offsetLeft;
-	  toppos += aTag.offsetTop;
+	do {
+		leftpos += aTag.offsetLeft;
+		toppos += aTag.offsetTop;
 	} while(aTag = aTag.offsetParent);
-	
 	tagName.style.top= toppos + 20 + 'px';
 	tagName.style.left= leftpos - 276 + 'px';
 }
 
-function getListOfRecords(obj, sModule, iId,sParentTab)
-{
-		new Ajax.Request(
-		'index.php',
-		{queue: {position: 'end', scope: 'command'},
-			method: 'post',
-			postBody: 'module=Users&action=getListOfRecords&ajax=true&CurModule='+sModule+'&CurRecordId='+iId+'&CurParentTab='+sParentTab,
-			onComplete: function(response) {
-				sResponse = response.responseText;
-				$("lstRecordLayout").innerHTML = sResponse;
-				Lay = 'lstRecordLayout';	
-				var tagName = document.getElementById(Lay);
-				var leftSide = findPosX(obj);
-				var topSide = findPosY(obj);
-				var maxW = tagName.style.width;
-				var widthM = maxW.substring(0,maxW.length-2);
-				var getVal = eval(leftSide) + eval(widthM);
-				if(getVal  > document.body.clientWidth ){
-					leftSide = eval(leftSide) - eval(widthM);
-					tagName.style.left = leftSide + 230 + 'px';
-				}
-				else
-					tagName.style.left= leftSide + 388 + 'px';
-				
-				setCoOrdinate(obj.id);
-				
-				tagName.style.display = 'block';
-				tagName.style.visibility = "visible";
-			}
+function getListOfRecords(obj, sModule, iId,sParentTab) {
+	jQuery.ajax({
+		method:"POST",
+		url:'index.php?module=Users&action=getListOfRecords&ajax=true&CurModule='+sModule+'&CurRecordId='+iId+'&CurParentTab='+sParentTab,
+	}).done(function(response) {
+		sResponse = response;
+		document.getElementById("lstRecordLayout").innerHTML = sResponse;
+		Lay = 'lstRecordLayout';
+		var tagName = document.getElementById(Lay);
+		var leftSide = findPosX(obj);
+		var topSide = findPosY(obj);
+		var maxW = tagName.style.width;
+		var widthM = maxW.substring(0,maxW.length-2);
+		var getVal = parseInt(leftSide) + parseInt(widthM);
+		if(getVal  > document.body.clientWidth ){
+			leftSide = parseInt(leftSide) - parseInt(widthM);
+			tagName.style.left = leftSide + 230 + 'px';
+			tagName.style.top = topSide + 20 + 'px';
+		}else{
+			tagName.style.left = leftSide + 388 + 'px';
 		}
-	);
+		setCoOrdinate(obj.id);
+
+		tagName.style.display = 'block';
+		tagName.style.visibility = "visible";
+	});
 }
 {/literal}
+function tagvalidate()
+{ldelim}
+	if(trim(document.getElementById('txtbox_tagfields').value) != '')
+		SaveTag('txtbox_tagfields','{$ID}','{$MODULE}');
+	else
+	{ldelim}
+		alert("{$APP.PLEASE_ENTER_TAG}");
+		return false;
+	{rdelim}
+{rdelim}
+function DeleteTag(id,recordid)
+{ldelim}
+	document.getElementById("vtbusy_info").style.display="inline";
+	jQuery('#tag_'+id).fadeOut();
+	jQuery.ajax({ldelim}
+			method:"POST",
+			url:"index.php?file=TagCloud&module={$MODULE}&action={$MODULE}Ajax&ajxaction=DELETETAG&recordid="+recordid+"&tagid=" +id,
+	{rdelim}).done(function(response) {ldelim}
+				getTagCloud();
+				jQuery("#vtbusy_info").hide();
+	{rdelim}
+	);
+{rdelim}
 
 </script>
 
-<div id="lstRecordLayout" class="layerPopup" style="display:none;width:325px;height:300px;"></div> <!-- Code added by SAKTI on 16th Jun, 2008 -->
+<div id="lstRecordLayout" class="layerPopup" style="display:none;width:325px;height:300px;"></div>
 
-<table width="100%" cellpadding="2" cellspacing="0" border="0">
-   <tr>
-	<td>
-		{include file='Buttons_List1.tpl'}
+<table width="100%" cellpadding="2" cellspacing="0" border="0" class="detailview_wrapper_table">
+	<tr>
+		<td class="detailview_wrapper_cell">
+
+		{include file='Buttons_List.tpl'}
 
 		<!-- Contents -->
 		<table border=0 cellspacing=0 cellpadding=0 width=98% align=center>
@@ -129,21 +115,18 @@ function getListOfRecords(obj, sModule, iId,sParentTab)
 			<td valign=top><img src="{'showPanelTopLeft.gif'|@vtiger_imageurl:$THEME}"></td>
 			<td class="showPanelBg" valign=top width=100%>
 			<!-- PUBLIC CONTENTS STARTS-->
-			   <div class="small" style="padding:20px" >
+						<div class="small" style="padding:14px" onclick="hndCancelOutsideClick();";>
 		
 				<table align="center" border="0" cellpadding="0" cellspacing="0" width="95%">
-				   <tr>
-					<td>
+								<tr><td>
 			         {* Module Record numbering, used MOD_SEQ_ID instead of ID *}
 			         {assign var="USE_ID_VALUE" value=$MOD_SEQ_ID}
-		  			 {if $USE_ID_VALUE eq ''} {assign var="USE_ID_VALUE" value=$ID} {/if}
-		  			
-						<span class="lvtHeaderText"><font color="purple">[ {$USE_ID_VALUE} ] </font>{$NAME} -  {$SINGLE_MOD|@getTranslatedString:$MODULE} {$APP.LBL_INFORMATION}</span>&nbsp;&nbsp;&nbsp;<span class="small">{$UPDATEINFO}</span>&nbsp;<span id="vtbusy_info" style="display:none;" valign="bottom"><img src="{'vtbusy.gif'|@vtiger_imageurl:$THEME}" border="0"></span><span id="vtbusy_info" style="visibility:hidden;" valign="bottom"><img src="{'vtbusy.gif'|@vtiger_imageurl:$THEME}" border="0"></span>
-					</td>
-				   </tr>
+					 {if $USE_ID_VALUE eq ''} {assign var="USE_ID_VALUE" value=$ID} {/if}
+									<span class="dvHeaderText">[ {$USE_ID_VALUE} ] {$NAME} -  {$SINGLE_MOD|@getTranslatedString:$MODULE} {$APP.LBL_INFORMATION}</span>&nbsp;&nbsp;&nbsp;<span class="small">{$UPDATEINFO}</span>&nbsp;<span id="vtbusy_info" style="display:none;" valign="bottom"><img src="{'vtbusy.gif'|@vtiger_imageurl:$THEME}" border="0"></span>
+								</td></tr>
 				</table>
 				<br>
-
+				{include file='applicationmessage.tpl'}
 				<!-- Entity and More information tabs -->
 				<table border=0 cellspacing=0 cellpadding=0 width=95% align=center>
 				   <tr>
@@ -293,20 +276,19 @@ function getListOfRecords(obj, sModule, iId,sParentTab)
 	   </tr>
 	   {/foreach}
 	</table>
-	</div> <!-- Line added by SAKTI on 10th Apr, 2008 -->
+	</div>
 <!-- Entity information(blocks) display - ends -->
 
 {* vtlib Customization: Embed DetailViewWidget block:// type if any *}
 {if $CUSTOM_LINKS && !empty($CUSTOM_LINKS.DETAILVIEWWIDGET)}
 {foreach item=CUSTOM_LINK_DETAILVIEWWIDGET from=$CUSTOM_LINKS.DETAILVIEWWIDGET}
 	{if preg_match("/^block:\/\/.*/", $CUSTOM_LINK_DETAILVIEWWIDGET->linkurl)}
-		{if ($smarty.foreach.BLOCKS.first && $CUSTOM_LINK_DETAILVIEWWIDGET->sequence <= 1)
-			|| ($CUSTOM_LINK_DETAILVIEWWIDGET->sequence == $smarty.foreach.BLOCKS.iteration + 1)
-			|| ($smarty.foreach.BLOCKS.last && $CUSTOM_LINK_DETAILVIEWWIDGET->sequence >= $smarty.foreach.BLOCKS.iteration + 1)}
-		<br>
-		{php}
-			echo vtlib_process_widget($this->_tpl_vars['CUSTOM_LINK_DETAILVIEWWIDGET'], $this->_tpl_vars);
-		{/php}
+		 {if ($smarty.foreach.BLOCKS.first && $CUSTOM_LINK_DETAILVIEWWIDGET->sequence <= 1) 
+		 	|| ($CUSTOM_LINK_DETAILVIEWWIDGET->sequence == $smarty.foreach.BLOCKS.iteration + 1)
+		 	|| ($smarty.foreach.BLOCKS.last && $CUSTOM_LINK_DETAILVIEWWIDGET->sequence >= $smarty.foreach.BLOCKS.iteration + 1)}
+			<tr>
+				<td style="padding:5px;" >{process_widget widgetLinkInfo=$CUSTOM_LINK_DETAILVIEWWIDGET}</td>
+			</tr>
 		{/if}
 	{/if}
 {/foreach}
@@ -371,7 +353,7 @@ function getListOfRecords(obj, sModule, iId,sParentTab)
 									{/if}
 								
 									{if $privrecord neq ''}
-									<img align="absmiddle" title="{$APP.LNK_LIST_PREVIOUS}" accessKey="{$APP.LNK_LIST_PREVIOUS}" onclick="location.href='index.php?module={$MODULE}&viewtype={$VIEWTYPE}&action=DetailView&record={$privrecord}&parenttab={$CATEGORY}'" name="privrecord" value="{$APP.LNK_LIST_PREVIOUS}" src="{'rec_prev.gif'|@vtiger_imageurl:$THEME}">&nbsp;
+									<img align="absmiddle" title="{$APP.LNK_LIST_PREVIOUS}" accessKey="{$APP.LNK_LIST_PREVIOUS}" onclick="location.href='index.php?module={$MODULE}&viewtype={if isset($VIEWTYPE)}{$VIEWTYPE}{/if}&action=DetailView&record={$privrecord}&parenttab={$CATEGORY}'" name="privrecord" value="{$APP.LNK_LIST_PREVIOUS}" src="{'rec_prev.gif'|@vtiger_imageurl:$THEME}">&nbsp;
 									{else}
 									<img align="absmiddle" title="{$APP.LNK_LIST_PREVIOUS}" src="{'rec_prev_disabled.gif'|@vtiger_imageurl:$THEME}">
 									{/if}
@@ -379,7 +361,7 @@ function getListOfRecords(obj, sModule, iId,sParentTab)
 									<img align="absmiddle" title="{$APP.LBL_JUMP_BTN}" accessKey="{$APP.LBL_JUMP_BTN}" onclick="var obj = this;var lhref = getListOfRecords(obj, '{$MODULE}',{$ID},'{$CATEGORY}');" name="jumpBtnIdBottom" id="jumpBtnIdBottom" src="{'rec_jump.gif'|@vtiger_imageurl:$THEME}">&nbsp;
 									{/if}
 									{if $nextrecord neq ''}
-									<img align="absmiddle" title="{$APP.LNK_LIST_NEXT}" accessKey="{$APP.LNK_LIST_NEXT}" onclick="location.href='index.php?module={$MODULE}&viewtype={$VIEWTYPE}&action=DetailView&record={$nextrecord}&parenttab={$CATEGORY}'" name="nextrecord" src="{'rec_next.gif'|@vtiger_imageurl:$THEME}">&nbsp;
+									<img align="absmiddle" title="{$APP.LNK_LIST_NEXT}" accessKey="{$APP.LNK_LIST_NEXT}" onclick="location.href='index.php?module={$MODULE}&viewtype={if isset($VIEWTYPE)}{$VIEWTYPE}{/if}&action=DetailView&record={$nextrecord}&parenttab={$CATEGORY}'" name="nextrecord" src="{'rec_next.gif'|@vtiger_imageurl:$THEME}">&nbsp;
 									{else}
 									<img align="absmiddle" title="{$APP.LNK_LIST_NEXT}" src="{'rec_next_disabled.gif'|@vtiger_imageurl:$THEME}">&nbsp;
 									{/if}
@@ -404,20 +386,17 @@ function getListOfRecords(obj, sModule, iId,sParentTab)
 <script>
 function getTagCloud()
 {ldelim}
-	var obj = $("tagfields");
+	var obj = document.getElementById("tagfields");
 	if(obj != null && typeof(obj) != undefined) {ldelim}
-new Ajax.Request(
-        'index.php',
-        {ldelim}queue: {ldelim}position: 'end', scope: 'command'{rdelim},
-        method: 'post',
-        postBody: 'module={$MODULE}&action={$MODULE}Ajax&file=TagCloud&ajxaction=GETTAGCLOUD&recordid={$ID}',
-        onComplete: function(response) {ldelim}
-                                $("tagfields").innerHTML=response.responseText;
-                                $("txtbox_tagfields").value ='';
-                        {rdelim}
-        {rdelim}
-);
+		jQuery.ajax({ldelim}
+				method:"POST",
+				url:'index.php?module={$MODULE}&action={$MODULE}Ajax&file=TagCloud&ajxaction=GETTAGCLOUD&recordid={$ID}',
+{rdelim}).done(function(response) {ldelim}
+			document.getElementById("tagfields").innerHTML=response;
+			document.getElementById("txtbox_tagfields").value ='';
 {rdelim}
+		);
+	{rdelim}
 {rdelim}
 getTagCloud();
 </script>
@@ -425,7 +404,7 @@ getTagCloud();
 	</td>
    </tr>
 </table>
-<script language="javascript">
+<script>
   var fieldname = new Array({$VALIDATION_DATA_FIELDNAME});
   var fieldlabel = new Array({$VALIDATION_DATA_FIELDLABEL});
   var fielddatatype = new Array({$VALIDATION_DATA_FIELDDATATYPE});

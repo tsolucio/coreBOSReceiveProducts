@@ -6,10 +6,9 @@
    * The Initial Developer of the Original Code is vtiger.
    * Portions created by vtiger are Copyright (C) vtiger.
    * All Rights Reserved.
-  *
  ********************************************************************************/
 -->*}
-{if $smarty.request.ajax neq ''}
+{if !empty($smarty.request.ajax)}
 &#&#&#{$ERROR}&#&#&#
 {/if}
 <script language="JavaScript" type="text/javascript" src="include/js/ListView.js"></script>
@@ -19,9 +18,9 @@
      <input name="change_owner" type="hidden">
      <input name="change_status" type="hidden">
      <input name="action" type="hidden">
-     <input name="where_export" type="hidden" value="{php} echo to_html($_SESSION['export_where']);{/php}">
+     <input name="where_export" type="hidden" value="{$export_where}">
      <input name="step" type="hidden">
-     <input name="allids" type="hidden" id="allids" value="{$ALLIDS}">
+     <input name="allids" type="hidden" id="allids" value="{if isset($ALLIDS)}{$ALLIDS}{/if}">
      <input name="selectedboxes" id="selectedboxes" type="hidden" value="{$SELECTEDIDS}">
      <input name="allselectedboxes" id="allselectedboxes" type="hidden" value="{$ALLSELECTEDIDS}">
      <input name="current_page_boxes" id="current_page_boxes" type="hidden" value="{$CURRENT_PAGE_BOXES}">
@@ -65,7 +64,7 @@
                 </td>
 				<td width=40% align="right">
 				   <!-- Filters -->
-				   {if $HIDE_CUSTOM_LINKS neq '1'}
+				   {if empty($HIDE_CUSTOM_LINKS) || $HIDE_CUSTOM_LINKS neq '1'}
 					<table border=0 cellspacing=0 cellpadding=0 class="small">
 					<tr>
 						<td>{$APP.LBL_VIEW}</td>
@@ -151,7 +150,7 @@
 						{$APP.LBL_NO} {$APP.ACTIVITIES} {$APP.LBL_FOUND} !
 					{else}
 						{* vtlib customization: Use translation string only if available *}
-						{$APP.LBL_NO} {if $APP.$MODULE_CREATE}{$APP.$MODULE_CREATE}{else}{$MODULE_CREATE}{/if} {$APP.LBL_FOUND} !
+						{$APP.LBL_NO} {$MODULE_CREATE|@getTranslatedString:$MODULE} {$APP.LBL_FOUND} !
 					{/if}
 					</span></td>
 				</tr>
@@ -162,7 +161,7 @@
 						 {$MOD.$MODULE_CREATE}
 					{else}
 						 {* vtlib customization: Use translation string only if available *}
-						 {if $APP.$MODULE_CREATE}{$APP.$MODULE_CREATE}{else}{$MODULE_CREATE}{/if}
+						 {$MODULE_CREATE|@getTranslatedString:$MODULE}
 					{/if}
 
 					{$APP.LBL_NOW}. {$APP.LBL_CLICK_THE_LINK}:<br>
@@ -172,7 +171,7 @@
 						 {$MOD.$MODULE_CREATE}
 					{else}
 						 {* vtlib customization: Use translation string only if available *}
-						 {if $APP.$MODULE_CREATE}{$APP.$MODULE_CREATE}{else}{$MODULE_CREATE}{/if}
+						 {$MODULE_CREATE|@getTranslatedString:$MODULE}
 					{/if}
 					</a><br>
 					{else}
@@ -245,11 +244,6 @@
 				     </table>
 				 </td>
 				 <td align="right" width=40%>
-				   <table border=0 cellspacing=0 cellpadding=0 class="small">
-					<tr>
-                                           {$WORDTEMPLATEOPTIONS}{$MERGEBUTTON}
-					</tr>
-				   </table>
 				 </td>
 			      </tr>
        		    </table>
@@ -258,5 +252,4 @@
 	    </table>
 
    </form>	
-{$SELECT_SCRIPT}
 <div id="basicsearchcolumns" style="display:none;"><select name="search_field" id="bas_searchfield" class="txtBox" style="width:150px">{html_options  options=$SEARCHLISTHEADER}</select></div>

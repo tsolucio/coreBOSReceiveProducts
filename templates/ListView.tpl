@@ -1,5 +1,4 @@
 {*<!--
-
 /*********************************************************************************
 ** The contents of this file are subject to the vtiger CRM Public License Version 1.0
  * ("License"); You may not use this file except in compliance with the License
@@ -7,219 +6,12 @@
  * The Initial Developer of the Original Code is vtiger.
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
-*
  ********************************************************************************/
-
 -->*}
-
-{*<!-- module header -->*}
-<script language="JavaScript" type="text/javascript" src="include/js/ListView.js"></script>
-<script language="JavaScript" type="text/javascript" src="include/js/search.js"></script>
-<script language="JavaScript" type="text/javascript" src="include/js/Merge.js"></script>
-<script language="JavaScript" type="text/javascript" src="include/js/dtlviewajax.js"></script>
-<script language="javascript" type="text/javascript">
-var typeofdata = new Array();
-typeofdata['E'] = ['is','isn','bwt','ewt','cts','dcts'];
-typeofdata['V'] = ['is','isn','bwt','ewt','cts','dcts'];
-typeofdata['N'] = ['is','isn','lst','grt','lsteq','grteq'];
-typeofdata['NN'] = ['is','isn','lst','grt','lsteq','grteq'];
-typeofdata['T'] = ['is','isn','lst','grt','lsteq','grteq'];
-typeofdata['I'] = ['is','isn','lst','grt','lsteq','grteq'];
-typeofdata['C'] = ['is','isn'];
-typeofdata['DT'] = ['is','isn','lst','grt','lsteq','grteq'];
-typeofdata['D'] = ['is','isn','lst','grt','lsteq','grteq'];
-var fLabels = new Array();
-fLabels['is'] = "{$APP.is}";
-fLabels['isn'] = "{$APP.is_not}";
-fLabels['bwt'] = "{$APP.begins_with}";
-fLabels['ewt'] = "{$APP.ends_with}";
-fLabels['cts'] = "{$APP.contains}";
-fLabels['dcts'] = "{$APP.does_not_contains}";
-fLabels['lst'] = "{$APP.less_than}";
-fLabels['grt'] = "{$APP.greater_than}";
-fLabels['lsteq'] = "{$APP.less_or_equal}";
-fLabels['grteq'] = "{$APP.greater_or_equal}";
-var noneLabel;
-{literal}
-function trimfValues(value)
-{
-    var string_array;
-    string_array = value.split(":");
-    return string_array[4];
-}
-
-function updatefOptions(sel, opSelName) {
-    var selObj = document.getElementById(opSelName);
-    var fieldtype = null ;
-
-    var currOption = selObj.options[selObj.selectedIndex];
-    var currField = sel.options[sel.selectedIndex];
-    
-    var fld = currField.value.split(":");
-    var tod = fld[4];
-  /*  if(fld[4] == 'D' || (fld[4] == 'T' && fld[1] != 'time_start' && fld[1] != 'time_end') || fld[4] == 'DT')
-    {
-	$("and"+sel.id).innerHTML =  "";
-	if(sel.id != "fcol5")
-		$("and"+sel.id).innerHTML =  "<em old='(yyyy-mm-dd)'>("+$("user_dateformat").value+")</em>&nbsp;"+alert_arr.LBL_AND;
-	else
-		$("and"+sel.id).innerHTML =  "<em old='(yyyy-mm-dd)'>("+$("user_dateformat").value+")</em>&nbsp;";
-    }
-    else {
-	$("and"+sel.id).innerHTML =  "";
-	if(sel.id != "fcol5")
-		$("and"+sel.id).innerHTML =  "&nbsp;"+alert_arr.LBL_AND;
-	else
-		$("and"+sel.id).innerHTML =  "&nbsp;";
-    } 	
-*/
-    if(currField.value != null && currField.value.length != 0)
-    {
-	fieldtype = trimfValues(currField.value);
-	fieldtype = fieldtype.replace(/\\'/g,'');
-	ops = typeofdata[fieldtype];
-	var off = 0;
-	if(ops != null)
-	{
-
-		var nMaxVal = selObj.length;
-		for(nLoop = 0; nLoop < nMaxVal; nLoop++)
-		{
-			selObj.remove(0);
-		}
-	/*	selObj.options[0] = new Option ('None', '');
-		if (currField.value == '') {
-			selObj.options[0].selected = true;
-		}*/
-		for (var i = 0; i < ops.length; i++)
-		{
-			var label = fLabels[ops[i]];
-			if (label == null) continue;
-			var option = new Option (fLabels[ops[i]], ops[i]);
-			selObj.options[i] = option;
-			if (currOption != null && currOption.value == option.value)
-			{
-				option.selected = true;
-			}
-		}
-	}
-    }else
-    {
-	var nMaxVal = selObj.length;
-	for(nLoop = 0; nLoop < nMaxVal; nLoop++)
-	{
-		selObj.remove(0);
-	}
-	selObj.options[0] = new Option ('None', '');
-	if (currField.value == '') {
-		selObj.options[0].selected = true;
-	}
-    }
-
-}
-{/literal}
-</script>
-<script language="JavaScript" type="text/javascript" src="modules/{$MODULE}/{$MODULE}.js"></script>
-<script language="javascript">
-function checkgroup()
-{ldelim}
-  if($("group_checkbox").checked)
-  {ldelim}
-  document.change_ownerform_name.lead_group_owner.style.display = "block";
-  document.change_ownerform_name.lead_owner.style.display = "none";
-  {rdelim}
-  else
-  {ldelim}
-  document.change_ownerform_name.lead_owner.style.display = "block";
-  document.change_ownerform_name.lead_group_owner.style.display = "none";
-  {rdelim}    
-  
-{rdelim}
-function callSearch(searchtype)
-{ldelim}
-	for(i=1;i<=26;i++)
-    	{ldelim}
-        	var data_td_id = 'alpha_'+ eval(i);
-        	getObj(data_td_id).className = 'searchAlph';
-    	{rdelim}
-    	gPopupAlphaSearchUrl = '';
-	search_fld_val= $('bas_searchfield').options[$('bas_searchfield').selectedIndex].value;
-	search_txt_val= encodeURIComponent(document.basicSearch.search_text.value);
-        var urlstring = '';
-        if(searchtype == 'Basic')
-        {ldelim}
-        		var p_tab = document.getElementsByName("parenttab");
-                urlstring = 'search_field='+search_fld_val+'&searchtype=BasicSearch&search_text='+search_txt_val+'&';
-                urlstring = urlstring + 'parenttab='+p_tab[0].value+ '&';
-        {rdelim}
-        else if(searchtype == 'Advanced')
-        {ldelim}
-                var no_rows = document.basicSearch.search_cnt.value;
-                for(jj = 0 ; jj < no_rows; jj++)
-                {ldelim}
-                        var sfld_name = getObj("Fields"+jj);
-                        var scndn_name= getObj("Condition"+jj);
-                        var srchvalue_name = getObj("Srch_value"+jj);
-                        var p_tab = document.getElementsByName("parenttab");
-                        urlstring = urlstring+'Fields'+jj+'='+sfld_name[sfld_name.selectedIndex].value+'&';
-                        urlstring = urlstring+'Condition'+jj+'='+scndn_name[scndn_name.selectedIndex].value+'&';
-			urlstring = urlstring+'Srch_value'+jj+'='+encodeURIComponent(srchvalue_name.value)+'&';
-                        urlstring = urlstring + 'parenttab='+p_tab[0].value+ '&';
-                {rdelim}
-                for (i=0;i<getObj("matchtype").length;i++){ldelim}
-                        if (getObj("matchtype")[i].checked==true)
-                                urlstring += 'matchtype='+getObj("matchtype")[i].value+'&';
-                {rdelim}
-                urlstring += 'search_cnt='+no_rows+'&';
-                urlstring += 'searchtype=advance&'
-        {rdelim}
-	$("status").style.display="inline";
-	new Ajax.Request(
-		'index.php',
-		{ldelim}queue: {ldelim}position: 'end', scope: 'command'{rdelim},
-			method: 'post',
-			postBody:urlstring +'query=true&file=index&module={$MODULE}&action={$MODULE}Ajax&ajax=true&search=true',
-			onComplete: function(response) {ldelim}
-								$("status").style.display="none";
-                                result = response.responseText.split('&#&#&#');
-                                $("ListViewContents").innerHTML= result[2];
-                                if(result[1] != '')
-									alert(result[1]);
-								$('basicsearchcolumns').innerHTML = '';
-			{rdelim}
-	       {rdelim}
-        );
-	return false
-{rdelim}
-function alphabetic(module,url,dataid)
-{ldelim}
-        for(i=1;i<=26;i++)
-        {ldelim}
-                var data_td_id = 'alpha_'+ eval(i);
-                getObj(data_td_id).className = 'searchAlph';
-
-        {rdelim}
-        getObj(dataid).className = 'searchAlphselected';
-	$("status").style.display="inline";
-	new Ajax.Request(
-		'index.php',
-		{ldelim}queue: {ldelim}position: 'end', scope: 'command'{rdelim},
-			method: 'post',
-			postBody: 'module='+module+'&action='+module+'Ajax&file=index&ajax=true&search=true&'+url,
-			onComplete: function(response) {ldelim}
-				$("status").style.display="none";
-				result = response.responseText.split('&#&#&#');
-				$("ListViewContents").innerHTML= result[2];
-				if(result[1] != '')
-			                alert(result[1]);
-				$('basicsearchcolumns').innerHTML = '';
-			{rdelim}
-		{rdelim}
-	);
-{rdelim}
-
-</script>
-
+<script type="text/javascript" src="include/js/ListView.js"></script>
+<script type="text/javascript" src="include/js/search.js"></script>
+<script type="text/javascript" src="include/js/Merge.js"></script>
+<script type="text/javascript" src="include/js/dtlviewajax.js"></script>
 		{include file='Buttons_List.tpl'}
                                 <div id="searchingUI" style="display:none;">
                                         <table border=0 cellspacing=0 cellpadding=0 width=100%>
@@ -332,8 +124,8 @@ function alphabetic(module,url,dataid)
 			</td>
 		</tr>
 	</table>
-</form>
-</div>		
+</form><br>
+</div>
 {*<!-- Searching UI -->*}
 
 <div id="mergeDup" style="z-index:1;display:none;position:relative;">
@@ -344,9 +136,9 @@ function alphabetic(module,url,dataid)
 		{include file="modules/Receiptcards/ListViewEntries.tpl"}
 	 </div>
 
-     </td>
-        <td valign=top><img src="{'showPanelTopRight.gif'|@vtiger_imageurl:$THEME}"></td>
-   </tr>
+	</td>
+	<td valign=top><img src="{'showPanelTopRight.gif'|@vtiger_imageurl:$THEME}"></td>
+	</tr>
 </table>
 
 <!-- MassEdit Feature -->
@@ -365,81 +157,19 @@ function alphabetic(module,url,dataid)
 
 <script>
 {literal}
-function recalculateStock()
-{
-    {/literal}
+function recalculateStock() {
+{/literal}
     recalculate = confirm("{$MOD.LBL_RECALCULATE_QUESTION}");
-    {literal}
-    
-    if(recalculate) 
-    {
-        $("status").style.display="inline";
-        
-        var url = "module=Receiptcards&action=ReceiptcardsAjax&file=RecalculateStock";
-        new Ajax.Request(
-                    'index.php',
-                      {queue: {position: 'end', scope: 'command'},
-                              method: 'post',
-                              postBody:url,
-                              onComplete: function(response) {
-                              
-                                  $("status").style.display="none";
-                              }
-                      }
-                      );
+{literal}
+    if (recalculate) {
+        jQuery("#status").show();
+    	jQuery.ajax({
+    		method:"POST",
+    		url: "index.php?module=Receiptcards&action=ReceiptcardsAjax&file=RecalculateStock";
+    	}).done(function(response) {
+    		jQuery("#status").hide();
+		});
     }
 }
-
-function ajaxChangeStatus(statusname)
-{
-	$("status").style.display="inline";
-	var viewid = document.getElementById('viewname').options[document.getElementById('viewname').options.selectedIndex].value;
-	var idstring = document.getElementById('idlist').value;
-	var searchurl= document.getElementById('search_url').value;
-	var tplstart='&';
-	if(gstart!='')
-	{
-		tplstart=tplstart+gstart;
-	}
-	if(statusname == 'status')
-	{
-		fninvsh('changestatus');
-		var url='&leadval='+document.getElementById('lead_status').options[document.getElementById('lead_status').options.selectedIndex].value;
-		var urlstring ="module=Users&action=updateLeadDBStatus&return_module=Leads"+tplstart+url+"&viewname="+viewid+"&idlist="+idstring+searchurl;
-	}
-	else if(statusname == 'owner')
-	{
-		if($("user_checkbox").checked)
-		{
-		    fninvsh('changeowner');
-		    var url='&owner_id='+document.getElementById('lead_owner').options[document.getElementById('lead_owner').options.selectedIndex].value;
-		    {/literal}
-		        var urlstring ="module=Users&action=updateLeadDBStatus&return_module={$MODULE}"+tplstart+url+"&viewname="+viewid+"&idlist="+idstring+searchurl;
-		    {literal}
-		} else {
-			fninvsh('changeowner');
-			var url='&owner_id='+document.getElementById('lead_group_owner').options[document.getElementById('lead_group_owner').options.selectedIndex].value;
-	      	{/literal}
-		        var urlstring ="module=Users&action=updateLeadDBStatus&return_module={$MODULE}"+tplstart+url+"&viewname="+viewid+"&idlist="+idstring+searchurl;
-        	{literal}
-    	}
-	}
-	new Ajax.Request(
-                'index.php',
-                {queue: {position: 'end', scope: 'command'},
-                        method: 'post',
-                        postBody: urlstring,
-                        onComplete: function(response) {
-                                $("status").style.display="none";
-                                result = response.responseText.split('&#&#&#');
-                                $("ListViewContents").innerHTML= result[2];
-                                if(result[1] != '')
-                                        alert(result[1]);
-				$('basicsearchcolumns').innerHTML = '';
-                        }
-                }
-        );
-	
-}
-</script>
 {/literal}
+</script>

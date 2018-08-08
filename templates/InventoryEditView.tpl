@@ -25,29 +25,6 @@
 </script>
 {/if}
 
-<script type="text/javascript">
-function sensex_info()
-{ldelim}
-        var Ticker = $('tickersymbol').value;
-        if(Ticker!='')
-        {ldelim}
-                $("vtbusy_info").style.display="inline";
-                new Ajax.Request(
-                      'index.php',
-                      {ldelim}queue: {ldelim}position: 'end', scope: 'command'{rdelim},
-                                method: 'post',
-                                postBody: 'module={$MODULE}&action=Tickerdetail&tickersymbol='+Ticker,
-                                onComplete: function(response) {ldelim}
-                                        $('autocom').innerHTML = response.responseText;
-                                        $('autocom').style.display="block";
-                                        $("vtbusy_info").style.display="none";
-                                {rdelim}
-                        {rdelim}
-                );
-        {rdelim}
-{rdelim}
-</script>
-
 {include file='Buttons_List1.tpl'}
 
 {*<!-- Contents -->*}

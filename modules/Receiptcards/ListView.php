@@ -23,10 +23,6 @@ require_once "modules/$currentModule/$currentModule.php";
 
 $log = LoggerManager::getLogger('order_list');
 
-if (!isset($where)) $where = "";
-
-$url_string = '';
-
 $focus = new Receiptcards();
 // Initialize sort by fields
 $focus->initSortbyField('Receiptcards');
@@ -42,18 +38,19 @@ if (!$_SESSION['lvs'][$currentModule]) {
 	$_SESSION['lvs'][$currentModule] = get_object_vars($modObj);
 }
 
-if ($_REQUEST['errormsg'] != '') {
+if (!empty($_REQUEST['errormsg'])) {
 	$errormsg = vtlib_purify($_REQUEST['errormsg']);
 	$smarty->assign("ERROR", "The User does not have permission to Change/Delete ".$errormsg." ".$currentModule);
 } else {
-	$smarty->assign("ERROR","");
+	$smarty->assign("ERROR", "");
 }
 $sorder = $focus->getSortOrder();
 $order_by = $focus->getOrderBy();
 
 $_SESSION[$currentModule."_Order_By"] = $order_by;
 $_SESSION[$currentModule."_Sort_Order"]=$sorder;
-
+$url_string = '';
+$smarty->assign('SEARCH_URL', $url_string);
 if (isset($_REQUEST['query']) && $_REQUEST['query'] == 'true') {
 	list($where, $ustring) = split("#@@#",getWhereCondition($currentModule));
 	// we have a query
@@ -61,6 +58,13 @@ if (isset($_REQUEST['query']) && $_REQUEST['query'] == 'true') {
 	$log->info("Here is the where clause for the list view: $where");
 	$smarty->assign("SEARCH_URL",$url_string);
 }
+if (isset($where) && $where != '') {
+	coreBOS_Session::set('export_where', $where);
+} else {
+	$where = '';
+	coreBOS_Session::delete('export_where');
+}
+$smarty->assign('export_where', to_html($where));
 
 //<<<<cutomview>>>>>>>
 $oCustomView = new CustomView("Receiptcards");
@@ -81,15 +85,13 @@ $smarty->assign("CV_DELETE_PERMIT",$delete_permit);
 //<<<<<customview>>>>>
 $smarty->assign("CHANGE_OWNER",getUserslist());
 $smarty->assign("CHANGE_GROUP_OWNER",getGroupslist());
-if(isPermitted('Receiptcards','Delete','') == 'yes')
-{
-	$other_text['del'] = $app_strings[LBL_MASS_DELETE];
+if(isPermitted('Receiptcards','Delete','') == 'yes') {
+	$other_text['del'] = $app_strings['LBL_MASS_DELETE'];
 }
-if(isPermitted('Receiptcards','EditView','') == 'yes')
-{
-	$other_text['mass_edit'] = $app_strings[LBL_MASS_EDIT];
-	$other_text['c_owner'] = $app_strings[LBL_CHANGE_OWNER];
-	$other_text['recalculate_stock'] = $mod_strings[LBL_RECALCULATE_STOCK];
+if(isPermitted('Receiptcards','EditView','') == 'yes') {
+	$other_text['mass_edit'] = $app_strings['LBL_MASS_EDIT'];
+	$other_text['c_owner'] = $app_strings['LBL_CHANGE_OWNER'];
+	$other_text['recalculate_stock'] = $mod_strings['LBL_RECALCULATE_STOCK'];
 }
 
 if($viewnamedesc['viewname'] == 'All')
@@ -128,29 +130,20 @@ if(isset($where) && $where != '')
 
 //$url_qry = getURLstring($focus);
 
-if(isset($order_by) && $order_by != '')
-{
-	if($order_by == 'smownerid')
-        {
-		if( $adb->dbType == "pgsql")
- 		    $query .= ' GROUP BY user_name';
-                $query .= ' ORDER BY user_name '.$sorder;
-        }
-        else
-        {
+if (isset($order_by) && $order_by != '') {
+	if ($order_by == 'smownerid') {
+		$query .= ' ORDER BY user_name '.$sorder;
+	} else {
 		$tablename = getTableNameForField('Receiptcards',$order_by);
 		$tablename = (($tablename != '')?($tablename."."):'');
-		if( $adb->dbType == "pgsql")
- 		    $query .= ' GROUP BY '.$tablename.$order_by;
-
-                $query .= ' ORDER BY '.$tablename.$order_by.' '.$sorder;
-        }
+		$query .= ' ORDER BY '.$tablename.$order_by.' '.$sorder;
+	}
 }
 
-if(PerformancePrefs::getBoolean('LISTVIEW_COMPUTE_PAGE_COUNT', false) === true){
-	$count_result = $adb->query( mkCountQuery( $query));
-	$noofrows = $adb->query_result($count_result,0,"count");
-}else{
+if (GlobalVariable::getVariable('Application_ListView_Compute_Page_Count', 0)!=0) {
+	$count_result = $adb->query(mkCountQuery($query));
+	$noofrows = $adb->query_result($count_result, 0, 'count');
+} else {
 	$noofrows = null;
 }
 
@@ -181,12 +174,11 @@ $smarty->assign("SEARCHLISTHEADER",$listview_header_search);
 
 $listview_entries = getListViewEntries($focus,"Receiptcards",$list_result,$navigation_array,"","","EditView","Delete",$oCustomView);
 $smarty->assign("LISTENTITY", $listview_entries);
-$smarty->assign("SELECT_SCRIPT", $view_script);
 
 //Added to select Multiple records in multiple pages
-$smarty->assign("SELECTEDIDS", vtlib_purify($_REQUEST['selobjs']));
-$smarty->assign("ALLSELECTEDIDS", vtlib_purify($_REQUEST['allselobjs']));
-$smarty->assign("CURRENT_PAGE_BOXES", implode(array_keys($listview_entries),";"));
+$smarty->assign('SELECTEDIDS', isset($_REQUEST['selobjs']) ? vtlib_purify($_REQUEST['selobjs']) : '');
+$smarty->assign('ALLSELECTEDIDS', isset($_REQUEST['allselobjs']) ? vtlib_purify($_REQUEST['allselobjs']) : '');
+$smarty->assign('CURRENT_PAGE_BOXES', implode(array_keys($listview_entries), ';'));
 
 $navigationOutput = getTableHeaderSimpleNavigation($navigation_array, $url_string,"Receiptcards","index",$viewid);
 $alphabetical = AlphabeticalSearch($currentModule,'index','subject','true','basic',"","","","",$viewid);

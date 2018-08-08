@@ -16,39 +16,11 @@
 <script type="text/javascript" src="modules/Services/Services.js"></script>
 <script type="text/javascript" src="include/js/FieldDependencies.js"></script>
 <script type="text/javascript" src="modules/com_vtiger_workflow/resources/jquery-1.2.6.js"></script>
-<script type="text/javascript">
-	jQuery.noConflict();
-</script>
-{if $PICKIST_DEPENDENCY_DATASOURCE neq ''}
+{if !empty($PICKIST_DEPENDENCY_DATASOURCE)}
 <script type="text/javascript">
 	jQuery(document).ready(function() {ldelim} (new FieldDependencies({$PICKIST_DEPENDENCY_DATASOURCE})).init() {rdelim});
 </script>
 {/if}
-
-<script type="text/javascript">
-
-function sensex_info()
-{ldelim}
-        var Ticker = $('tickersymbol').value;
-        if(Ticker!='')
-        {ldelim}
-		$("vtbusy_info").style.display="inline";
-		new Ajax.Request(
-          	      'index.php',
-                      {ldelim}queue: {ldelim}position: 'end', scope: 'command'{rdelim},
-                      		method: 'post',
-                        	postBody: 'module={$MODULE}&action=Tickerdetail&tickersymbol='+Ticker,
-	                        onComplete: function(response) {ldelim}
-					$('autocom').innerHTML = response.responseText;
-				        $('autocom').style.display="block";
-        	                        $("vtbusy_info").style.display="none";
-                	        {rdelim}
-                	{rdelim}
-        	);
-        {rdelim}
-{rdelim}
-
-</script>
 
 {include file='Buttons_List1.tpl'}
 
@@ -64,19 +36,19 @@ function sensex_info()
 	 	 <form id="frmEditView" name="EditView" method="POST" action="index.php" onSubmit="settotalnoofrows();calcTotal();VtigerJS_DialogBox.block();">
   	     <input type="hidden" name="hidImagePath" id="hidImagePath" value="{$IMAGE_PATH}"/>
        	 <input type="hidden" name="convertmode">
-		 <input type="hidden" name="pagenumber" value="{$smarty.request.start|@vtlib_purify}">
+		 <input type="hidden" name="pagenumber" value="{if isset($smarty.request.start)}{$smarty.request.start|@vtlib_purify}{/if}">
          <input type="hidden" name="module" value="{$MODULE}">
          <input type="hidden" name="record" value="{$ID}">
-         <input type="hidden" name="mode" value="{$MODE}">
+         <input type="hidden" name="mode" value="{if isset($MODE)}{$MODE}{/if}">
          <input type="hidden" name="action">
          <input type="hidden" name="parenttab" value="{$CATEGORY}">
          <input type="hidden" name="return_module" value="{$RETURN_MODULE}">
-         <input type="hidden" name="return_id" value="{$RETURN_ID}">
+         <input type="hidden" name="return_id" value="{if isset($RETURN_ID)}{$RETURN_ID}{/if}">
          <input type="hidden" name="return_action" value="{$RETURN_ACTION}">
-         <input type="hidden" name="return_viewname" value="{$RETURN_VIEWNAME}">
-		
+         <input type="hidden" name="return_viewname" value="{if isset($RETURN_VIEWNAME)}{$RETURN_VIEWNAME}{/if}">
+
 	     <div class="small" style="padding:20px">
-		
+
 		 {if $OP_MODE eq 'edit_view'}
 			 <span class="lvtHeaderText"><font color="purple">[ {$ID} ] </font>{$NAME} -  {$APP.LBL_EDITING} {$SINGLE_MOD|@getTranslatedString:$MODULE} {$APP.LBL_INFORMATION}</span> <br>
 			{$UPDATEINFO}	 

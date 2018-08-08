@@ -7,16 +7,16 @@
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
  ************************************************************************************/
-require_once ('Smarty_setup.php');
-require_once ('data/Tracker.php');
-require_once ('modules/Receiptcards/Receiptcards.php');
-require_once ('modules/Quotes/Quotes.php');
-require_once ('modules/SalesOrder/SalesOrder.php');
-require_once ('modules/Potentials/Potentials.php');
-require_once ('modules/PurchaseOrder/PurchaseOrder.php');
-require_once ('include/CustomFieldUtil.php');
-require_once ('include/utils/utils.php');
-
+require_once 'Smarty_setup.php';
+require_once 'data/Tracker.php';
+require_once 'modules/Receiptcards/Receiptcards.php';
+require_once 'modules/Quotes/Quotes.php';
+require_once 'modules/SalesOrder/SalesOrder.php';
+require_once 'modules/Potentials/Potentials.php';
+require_once 'modules/PurchaseOrder/PurchaseOrder.php';
+require_once 'include/CustomFieldUtil.php';
+require_once 'include/utils/utils.php';
+error_reporting(E_ERROR);
 global $app_strings, $mod_strings, $currentModule, $log, $current_user;
 
 $focus = CRMEntity::getInstance($currentModule);
@@ -24,7 +24,7 @@ $smarty = new vtigerCRM_Smarty();
 //added to fix the issue4600
 $searchurl = getBasic_Advance_SearchURL();
 $smarty->assign("SEARCH", $searchurl);
-//4600 ends
+$smarty->assign("AVAILABLE_PRODUCTS", 'false');
 
 $currencyid = fetchCurrency($current_user->id);
 $rate_symbol = getCurrencySymbolandCRate($currencyid);
@@ -49,7 +49,7 @@ if(empty($_REQUEST['record']) && $focus->mode != 'edit'){
 global $theme;
 $theme_path = "themes/" . $theme . "/";
 $image_path = $theme_path . "images/";
-
+$smarty->assign('MASS_EDIT', '0');
 $disp_view = getView($focus->mode);
 $mode = $focus->mode;
 if ($disp_view == 'edit_view')
@@ -67,7 +67,7 @@ else {
 }
 
 $smarty->assign("OP_MODE", $disp_view);
-
+$smarty->assign('MODE', $focus->mode);
 $smarty->assign("MODULE", $currentModule);
 $smarty->assign("SINGLE_MOD", 'Receiptcards');
 
@@ -80,7 +80,7 @@ if (isset ($focus->name))
 	$smarty->assign("NAME", $focus->name);
 else
 	$smarty->assign("NAME", "");
-
+$associated_prod = array();
 if ($focus->mode == 'edit') {
 	$smarty->assign("UPDATEINFO", updateInfo($focus->id));
 	$associated_prod = getReceiptcardsAssociatedProducts($focus);
@@ -151,7 +151,6 @@ if (isset ($_REQUEST['return_viewname']))
 	$smarty->assign("RETURN_VIEWNAME", vtlib_purify($_REQUEST['return_viewname']));
 $smarty->assign("THEME", $theme);
 $smarty->assign("IMAGE_PATH", $image_path);
-$smarty->assign("PRINT_URL", "phprint.php?jt=" . session_id() . $GLOBALS['request_string']);
 $smarty->assign("ID", $focus->id);
 
 $smarty->assign("CALENDAR_LANG", $app_strings['LBL_JSCALENDAR_LANG']);
@@ -200,7 +199,7 @@ if ($focus->mode != 'edit' && $mod_seq_field != null) {
 // END
 
 $smarty->assign("CURRENCIES_LIST", getAllCurrencies());
-if ($focus->mode == 'edit' || $_REQUEST['isDuplicate'] == 'true') {
+if ($focus->mode == 'edit' || (isset($_REQUEST['isDuplicate']) && $_REQUEST['isDuplicate'] == 'true')) {
 	$inventory_cur_info = getReceiptcardsInventoryCurrencyInfo($focus->id);
 	$smarty->assign("INV_CURRENCY_ID", $inventory_cur_info['currency_id']);
 } else {
@@ -209,7 +208,7 @@ if ($focus->mode == 'edit' || $_REQUEST['isDuplicate'] == 'true') {
 
 $check_button = Button_Check($module);
 $smarty->assign("CHECK", $check_button);
-$smarty->assign("DUPLICATE",vtlib_purify($_REQUEST['isDuplicate']));
+$smarty->assign("DUPLICATE", isset($_REQUEST['isDuplicate']) ? vtlib_purify($_REQUEST['isDuplicate']) : '');
 //Get Service or Product by default when create
 $smarty->assign('PRODUCT_OR_SERVICE', GlobalVariable::getVariable('product_service_default', 'Products', $currentModule, $current_user->id));
 //Set taxt type group or individual by default when create
