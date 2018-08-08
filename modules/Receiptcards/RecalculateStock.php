@@ -16,8 +16,8 @@
  *  Module       : coreBOS Receive Products
  *  Version      : 1.2
  *************************************************************************************************/
-require_once('include/logging.php');
-require_once('include/database/PearDatabase.php');
+require_once 'include/logging.php';
+require_once 'include/database/PearDatabase.php';
 
 function recalculateReceiptcardsStock() {
 	global $adb;
@@ -34,7 +34,7 @@ function recalculateReceiptcardsStock() {
 		WHERE vtiger_crmentity.deleted = 0 GROUP BY productid';
 	$result_i = $adb->query($sql_i);
 
-	while($row = $adb->fetchByAssoc($result_i)) {
+	while ($row = $adb->fetchByAssoc($result_i)) {
 		$sql_u = "UPDATE vtiger_products SET qtyinstock = qtyinstock + ".$row['qty']." WHERE productid = ".$row['productid'];
 		$adb->query($sql_u);
 	}
@@ -43,6 +43,6 @@ function recalculateReceiptcardsStock() {
 recalculateReceiptcardsStock();
 
 if (file_exists("modules/Issuecards/RecalculateStock.php") && $_REQUEST["module"] == "Receiptcards") {
-	require_once("modules/Issuecards/RecalculateStock.php");
+	require_once "modules/Issuecards/RecalculateStock.php";
 }
 ?>

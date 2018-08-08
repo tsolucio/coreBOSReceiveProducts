@@ -35,5 +35,4 @@ $mod_strings = array(
 	'LBL_RECALCULATE_QUESTION'=>'Are you sure you want to calculate the actual quantity of products in stock?',
 	'Related To'=>'Related To',
 );
-
 ?>

@@ -8,16 +8,16 @@
  ********************************************************************************/
 
 function set_return(receiptcards_id, receiptcards_name) {
-  window.opener.document.EditView.parent_name.value = receiptcards_name;
-  window.opener.document.EditView.parent_id.value = receiptcards_id;
+	window.opener.document.EditView.parent_name.value = receiptcards_name;
+	window.opener.document.EditView.parent_id.value = receiptcards_id;
 }
 
-function set_return_specific(receiptcards_id, receiptcards_name) 
+function set_return_specific(receiptcards_id, receiptcards_name)
 {
-  var fldName = getOpenerObj("receiptcards_name");
-  var fldId = getOpenerObj("receiptcards_id");
-  fldName.value = receiptcards_name;
-  fldId.value = receiptcards_id;
+	var fldName = getOpenerObj("receiptcards_name");
+	var fldId = getOpenerObj("receiptcards_id");
+	fldName.value = receiptcards_name;
+	fldId.value = receiptcards_id;
 }
 
 function fnAddProductRowRI(module,image_path){
@@ -29,62 +29,55 @@ function fnAddProductRowRI(module,image_path){
 	var row = tableName.insertRow(prev);
 	row.id = "row"+count;
 	row.style.verticalAlign = "top";
-	
+
 	var colone = row.insertCell(0);
 	var coltwo = row.insertCell(1);
 	var colfour = row.insertCell(2);
 	var colfive = row.insertCell(3);
 	var colsix = row.insertCell(4);
 	var colseven = row.insertCell(5);
-	
+
 	/* Product Re-Ordering Feature Code Addition Starts */
 	iMax = tableName.rows.length;
-	for(iCount=1;iCount<=iMax-3;iCount++)
-	{
-		if(document.getElementById("row"+iCount) && document.getElementById("row"+iCount).style.display != 'none')
-		{
+	for (iCount=1; iCount<=iMax-3; iCount++) {
+		if (document.getElementById("row"+iCount) && document.getElementById("row"+iCount).style.display != 'none') {
 			iPrevRowIndex = iCount;
 		}
 	}
 	iPrevCount = eval(iPrevRowIndex);
-	var oPrevRow = tableName.rows[iPrevRowIndex+1]; 
+	var oPrevRow = tableName.rows[iPrevRowIndex+1];
 	var delete_row_count=count;
 	/* Product Re-Ordering Feature Code Addition ends */
-	
-	
+
 	//Delete link
 	colone.className = "crmTableRow small";
 	colone.id = row.id+"_col1";
 	colone.innerHTML='<img src="themes/images/delete.gif" border="0" onclick="deleteRow(\''+module+'\','+count+',\'themes/images/\')"><input id="deleted'+count+'" name="deleted'+count+'" type="hidden" value="0"><br/><br/>&nbsp;<a href="javascript:moveUpDown(\'UP\',\''+module+'\','+count+')" title="Move Upward"><img src="themes/images/up_layout.gif" border="0"></a>';
 	/* Product Re-Ordering Feature Code Addition Starts */
-	if(iPrevCount != 1)
-	{
+	if (iPrevCount != 1) {
 		oPrevRow.cells[0].innerHTML = '<img src="themes/images/delete.gif" border="0" onclick="deleteRow(\''+module+'\','+iPrevCount+')"><input id="deleted'+iPrevCount+'" name="deleted'+iPrevCount+'" type="hidden" value="0"><br/><br/>&nbsp;<a href="javascript:moveUpDown(\'UP\',\''+module+'\','+iPrevCount+')" title="Move Upward"><img src="themes/images/up_layout.gif" border="0"></a>&nbsp;&nbsp;<a href="javascript:moveUpDown(\'DOWN\',\''+module+'\','+iPrevCount+')" title="Move Downward"><img src="themes/images/down_layout.gif" border="0"></a>';
-	}
-	else
-	{
+	} else {
 		oPrevRow.cells[0].innerHTML = '<input id="deleted'+iPrevCount+'" name="deleted'+iPrevCount+'" type="hidden" value="0"><br/><br/><a href="javascript:moveUpDown(\'DOWN\',\''+module+'\','+iPrevCount+')" title="Move Downward"><img src="themes/images/down_layout.gif" border="0"></a>';
 	}
 	/* Product Re-Ordering Feature Code Addition ends */
-	
+
 	//Product Name with Popup image to select product, crm-now: Product Code and description added
 	coltwo.className = "crmTableRow small";
 	coltwo.innerHTML= '<table border="0" cellpadding="1" cellspacing="0" width="100%"><tr><td class="small"><input id="productName'+count+'" name="productName'+count+'" class="small" style="width: 70%;" value="" readonly="readonly" type="text">'+
 						'<span id="qtyInStock'+count+'" style="display:none"></span>'+
-            '<input id="hdnProductId'+count+'" name="hdnProductId'+count+'" value="" type="hidden"><input type="hidden" id="lineItemType'+count+'" name="lineItemType'+count+'" value="Products" />'+
+			'<input id="hdnProductId'+count+'" name="hdnProductId'+count+'" value="" type="hidden"><input type="hidden" id="lineItemType'+count+'" name="lineItemType'+count+'" value="Products" />'+
 						'&nbsp;<img id="searchIcon'+count+'" title="Products" src="themes/images/products.gif" style="cursor: pointer;" onclick="productPickList(this,\''+module+'\','+count+')" align="absmiddle">'+
 						'</td></tr><tr><td class="small"><input type="hidden" value="" id="subproduct_ids'+count+'" name="subproduct_ids'+count+'" /><span id="subprod_names'+count+'" name="subprod_names'+count+'" style="color:#C0C0C0;font-style:italic;"> </span>'+
-						'</td></tr><tr><td class="small" id="setComment'+count+'"><textarea id="comment'+count+'" name="comment'+count+'" class=small style="width:70%;height:40px"></textarea><img src="themes/images/clear_field.gif" onClick="getObj(\'comment'+count+'\').value=\'\'"; style="cursor:pointer;" /></td></tr></tbody></table>';	
+						'</td></tr><tr><td class="small" id="setComment'+count+'"><textarea id="comment'+count+'" name="comment'+count+'" class=small style="width:70%;height:40px"></textarea><img src="themes/images/clear_field.gif" onClick="getObj(\'comment'+count+'\').value=\'\'"; style="cursor:pointer;" /></td></tr></tbody></table>';
 
 	//Quantity
 	var temp='';
 	colfour.className = "crmTableRow small";
 	temp='<input id="qty'+count+'" name="qty'+count+'" type="text" class="small " style="width:50px" onfocus="this.className=\'detailedViewTextBoxOn\'" onBlur="settotalnoofrows(); calcTotal(); loadTaxes_Ajax('+count+');';
-	if(module == "Invoice")
-        {
+	if (module == "Invoice") {
 		temp+='stock_alert('+count+');';
 	}
-        temp+='" onChange="setDiscount(this,'+count+')" value=""/><br><span id="stock_alert'+count+'"></span>';
+		temp+='" onChange="setDiscount(this,'+count+')" value=""/><br><span id="stock_alert'+count+'"></span>';
 	colfour.innerHTML=temp;
 	//List Price with Discount, Total after Discount and Tax labels
 	colfive.className = "crmTableRow small";
@@ -99,7 +92,7 @@ function fnAddProductRowRI(module,image_path){
 	colseven.align = "right";
 	colseven.style.verticalAlign = "bottom";
 	colseven.innerHTML = '<span id="netPrice'+count+'"><b>&nbsp;</b></span>';
-	
+
 	//This is to show or hide the individual or group tax
 	decideTaxDiv();
 
@@ -117,25 +110,23 @@ function fnAddServiceRowRI(module,image_path){
 	var row = tableName.insertRow(prev);
 	row.id = "row"+count;
 	row.style.verticalAlign = "top";
-	
+
 	var colone = row.insertCell(0);
 	var coltwo = row.insertCell(1);
 	var colfour = row.insertCell(2);
 	var colfive = row.insertCell(3);
 	var colsix = row.insertCell(4);
 	var colseven = row.insertCell(5);
-	
+
 	/* Product Re-Ordering Feature Code Addition Starts */
 	iMax = tableName.rows.length;
-	for(iCount=1;iCount<=iMax-3;iCount++)
-	{
-		if(document.getElementById("row"+iCount) && document.getElementById("row"+iCount).style.display != 'none')
-		{
+	for (iCount=1; iCount<=iMax-3; iCount++) {
+		if (document.getElementById("row"+iCount) && document.getElementById("row"+iCount).style.display != 'none') {
 			iPrevRowIndex = iCount;
 		}
 	}
 	iPrevCount = eval(iPrevRowIndex);
-	var oPrevRow = tableName.rows[iPrevRowIndex+1]; 
+	var oPrevRow = tableName.rows[iPrevRowIndex+1];
 	var delete_row_count=count;
 	/* Product Re-Ordering Feature Code Addition ends */
 
@@ -144,29 +135,26 @@ function fnAddServiceRowRI(module,image_path){
 	colone.id = row.id+"_col1";
 	colone.innerHTML='<img src="themes/images/delete.gif" border="0" onclick="deleteRow(\''+module+'\','+count+',\''+image_path+'\')"><input id="deleted'+count+'" name="deleted'+count+'" type="hidden" value="0"><br/><br/>&nbsp;<a href="javascript:moveUpDown(\'UP\',\''+module+'\','+count+')" title="Move Upward"><img src="themes/images/up_layout.gif" border="0"></a>';
 	/* Product Re-Ordering Feature Code Addition Starts */
-	if(iPrevCount != 1)
-	{
+	if (iPrevCount != 1) {
 		oPrevRow.cells[0].innerHTML = '<img src="themes/images/delete.gif" border="0" onclick="deleteRow(\''+module+'\','+iPrevCount+')"><input id="deleted'+iPrevCount+'" name="deleted'+iPrevCount+'" type="hidden" value="0"><br/><br/>&nbsp;<a href="javascript:moveUpDown(\'UP\',\''+module+'\','+iPrevCount+')" title="Move Upward"><img src="themes/images/up_layout.gif" border="0"></a>&nbsp;&nbsp;<a href="javascript:moveUpDown(\'DOWN\',\''+module+'\','+iPrevCount+')" title="Move Downward"><img src="themes/images/down_layout.gif" border="0"></a>';
-	}
-	else
-	{
+	} else {
 		oPrevRow.cells[0].innerHTML = '<input id="deleted'+iPrevCount+'" name="deleted'+iPrevCount+'" type="hidden" value="0"><br/><br/><a href="javascript:moveUpDown(\'DOWN\',\''+module+'\','+iPrevCount+')" title="Move Downward"><img src="themes/images/down_layout.gif" border="0"></a>';
 	}
 	/* Product Re-Ordering Feature Code Addition ends */
-	
+
 	//Product Name with Popup image to select product, crm-now: Product Code and description added
 	coltwo.className = "crmTableRow small";
 	//coltwo.innerHTML= '<table border="0" cellpadding="1" cellspacing="0" width="100%"><tr><td class="small"><input id="productName'+count+'" name="productName'+count+'" class="small" style="width: 70%;" value="" readonly="readonly" type="text" />'+
 	//					'<input id="hdnProductId'+count+'" name="hdnProductId'+count+'" value="" type="hidden" /><input type="hidden" id="lineItemType'+count+'" name="lineItemType'+count+'" value="Services" />'+
 	//					'&nbsp;<img id="searchIcon'+count+'" title="Services" src="themes/images/services.gif" style="cursor: pointer;" onclick="servicePickList(this,\''+module+'\','+count+')" align="absmiddle">'+
 	//					'</td></tr><tr><td class="small"><input type="hidden" value="" id="subproduct_ids'+count+'" name="subproduct_ids'+count+'" /><span id="subprod_names'+count+'" name="subprod_names'+count+'" style="color:#C0C0C0;font-style:italic;"> </span>'+
-	//					'</td></tr><tr><td class="small" id="setComment'+count+'"><textarea id="comment'+count+'" name="comment'+count+'" class=small style="width:70%;height:40px"></textarea><img src="themes/images/clear_field.gif" onClick="getObj(\'comment'+count+'\').value=\'\'"; style="cursor:pointer;" /></td></tr></tbody></table>';	
+	//                  '</td></tr><tr><td class="small" id="setComment'+count+'"><textarea id="comment'+count+'" name="comment'+count+'" class=small style="width:70%;height:40px"></textarea><img src="themes/images/clear_field.gif" onClick="getObj(\'comment'+count+'\').value=\'\'"; style="cursor:pointer;" /></td></tr></tbody></table>';
 	coltwo.innerHTML= '<table border="0" cellpadding="1" cellspacing="0" width="100%"><tr><td class="small"><input id="productName'+count+'" name="productName'+count+'" class="small" style="width: 70%;" value="" readonly="readonly" type="text">'+
 						'<input id="hdnProductId'+count+'" name="hdnProductId'+count+'" value="" type="hidden"><input type="hidden" id="lineItemType'+count+'" name="lineItemType'+count+'" value="Services" />'+
 						'&nbsp;<img id="searchIcon'+count+'" title="Services" src="themes/images/services.gif" style="cursor: pointer;" onclick="servicePickList(this,\''+module+'\','+count+')" align="absmiddle">'+
 						'</td></tr><tr><td class="small"><input type="hidden" value="" id="subproduct_ids'+count+'" name="subproduct_ids'+count+'" /><span id="subprod_names'+count+'" name="subprod_names'+count+'" style="color:#C0C0C0;font-style:italic;"> </span>'+
-						'</td></tr><tr><td class="small" id="setComment'+count+'"><textarea id="comment'+count+'" name="comment'+count+'" class=small style="width:70%;height:40px"></textarea><img src="themes/images/clear_field.gif" onClick="getObj(\'comment'+count+'\').value=\'\'"; style="cursor:pointer;" /></td></tr></tbody></table>';	
-	
+						'</td></tr><tr><td class="small" id="setComment'+count+'"><textarea id="comment'+count+'" name="comment'+count+'" class=small style="width:70%;height:40px"></textarea><img src="themes/images/clear_field.gif" onClick="getObj(\'comment'+count+'\').value=\'\'"; style="cursor:pointer;" /></td></tr></tbody></table>';
+
 	//Quantity
 	var temp='';
 	colfour.className = "crmTableRow small";
@@ -186,7 +174,7 @@ function fnAddServiceRowRI(module,image_path){
 	colseven.align = "right";
 	colseven.style.verticalAlign = "bottom";
 	colseven.innerHTML = '<span id="netPrice'+count+'"><b>&nbsp;</b></span>';
-	
+
 	//This is to show or hide the individual or group tax
 	decideTaxDiv();
 
@@ -194,4 +182,3 @@ function fnAddServiceRowRI(module,image_path){
 
 	return count;
 }
-
