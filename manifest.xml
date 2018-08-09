@@ -554,6 +554,16 @@
 </sharingaccess>
 <customlinks>
 <customlink>
+<linktype>LISTVIEWBASIC</linktype>
+<linklabel>LBL_RECALCULATE_STOCK</linklabel>
+<linkurl><![CDATA[javascript:recalculateStock()]]></linkurl>
+<linkicon><![CDATA[]]></linkicon>
+<sequence>4</sequence>
+<handler_path><![CDATA[]]></handler_path>
+<handler_class><![CDATA[]]></handler_class>
+<handler><![CDATA[]]></handler>
+</customlink>
+<customlink>
 <linktype>DETAILVIEWBASIC</linktype>
 <linklabel>View History</linklabel>
 <linkurl><![CDATA[javascript:ModTrackerCommon.showhistory('$RECORD$')]]></linkurl>

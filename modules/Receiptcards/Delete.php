@@ -14,11 +14,6 @@ if (!isset($_REQUEST['record'])) {
 	die($mod_strings['ERR_DELETE_RECORD']);
 }
 
-require_once 'include/logging.php';
-$log = LoggerManager::getLogger('receiptcards_delete');
-
-$focus = new Receiptcards();
-
 $record = vtlib_purify($_REQUEST['record']);
 $module = urlencode(vtlib_purify($_REQUEST['module']));
 $return_module = vtlib_purify($_REQUEST['return_module']);
@@ -34,6 +29,7 @@ if (isset($_REQUEST['activity_mode'])) {
 	$url .= '&activity_mode='.urlencode(vtlib_purify($_REQUEST['activity_mode']));
 }
 if ($_REQUEST['module'] == $_REQUEST['return_module']) {
+	$focus = new Receiptcards();
 	$focus->id = $record;
 	deleteReceiptcardsInventoryProductDetails($focus, false);
 	$focus->mark_deleted($record);

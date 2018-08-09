@@ -23,8 +23,7 @@ function recalculateReceiptcardsStock() {
 	global $adb;
 
 	if ($_REQUEST['module'] == 'Receiptcards') {
-		$sql = 'UPDATE vtiger_products SET qtyinstock = 0';
-		$adb->query($sql);
+		$adb->query('UPDATE vtiger_products SET qtyinstock = 0');
 	}
 
 	$sql_i = 'SELECT vtiger_inventoryproductrel.productid, sum(vtiger_inventoryproductrel.quantity) AS qty
@@ -34,15 +33,15 @@ function recalculateReceiptcardsStock() {
 		WHERE vtiger_crmentity.deleted = 0 GROUP BY productid';
 	$result_i = $adb->query($sql_i);
 
+	$sql_u = 'UPDATE vtiger_products SET qtyinstock = qtyinstock + ? WHERE productid = ?';
 	while ($row = $adb->fetchByAssoc($result_i)) {
-		$sql_u = "UPDATE vtiger_products SET qtyinstock = qtyinstock + ".$row['qty']." WHERE productid = ".$row['productid'];
-		$adb->query($sql_u);
+		$adb->pquery($sql_u, array($row['qty'], $row['productid']));
 	}
 }
 
 recalculateReceiptcardsStock();
 
-if (file_exists("modules/Issuecards/RecalculateStock.php") && $_REQUEST["module"] == "Receiptcards") {
-	require_once "modules/Issuecards/RecalculateStock.php";
+if (file_exists('modules/Issuecards/RecalculateStock.php') && $_REQUEST['module'] == 'Receiptcards') {
+	require_once 'modules/Issuecards/RecalculateStock.php';
 }
 ?>

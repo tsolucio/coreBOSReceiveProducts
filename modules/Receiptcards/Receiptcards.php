@@ -235,7 +235,6 @@ class Receiptcards extends CRMEntity {
 			$child->save($destinationModule, $relcrmid);
 		}
 	}
-
 } // END OF CLASS
 
 function getReceiptcardsInventoryTaxType($id) {
@@ -252,9 +251,13 @@ function getReceiptcardsInventoryCurrencyInfo($id) {
 
 	$log->debug("Entering into function getReceiptcardsInventoryCurrencyInfo($id).");
 
-	$res = $adb->pquery("select currency_id, vtiger_receiptcards.conversion_rate as conv_rate, vtiger_currency_info.* from vtiger_receiptcards
-						inner join vtiger_currency_info on vtiger_receiptcards.currency_id = vtiger_currency_info.id
-						where receiptcardid=?", array($focus->id));
+	$res = $adb->pquery(
+		'select currency_id, vtiger_receiptcards.conversion_rate as conv_rate, vtiger_currency_info.*
+			from vtiger_receiptcards
+			inner join vtiger_currency_info on vtiger_receiptcards.currency_id = vtiger_currency_info.id
+			where receiptcardid=?',
+		array($id)
+	);
 
 	$currency_info = array();
 	$currency_info['currency_id'] = $adb->query_result($res, 0, 'currency_id');

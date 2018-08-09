@@ -8,117 +8,17 @@
  * All Rights Reserved.
  ************************************************************************************/
 require_once 'Smarty_setup.php';
-require_once 'data/Tracker.php';
-require_once 'include/CustomFieldUtil.php';
-require_once 'include/utils/utils.php';
-require_once 'user_privileges/default_module_view.php';
-global $mod_strings,$app_strings,$currentModule,$theme,$singlepane_view;
 
-$focus = CRMEntity::getInstance($currentModule);
+global $mod_strings, $app_strings, $currentModule, $current_user, $theme, $log;
 
-if (isset($_REQUEST['record']) && isset($_REQUEST['record'])) {
-	$focus->retrieve_entity_info($_REQUEST['record'], "Receiptcards");
-	$focus->id = $_REQUEST['record'];
-	$focus->name=$focus->column_fields['subject'];
-	if ($focus->column_fields['parent_id'] == "0") {
-		$focus->column_fields['parent_id'] = "";
-	}
-}
+$smarty = new vtigerCRM_Smarty();
 
-if (isset($_REQUEST['isDuplicate']) && $_REQUEST['isDuplicate'] == 'true') {
-	$focus->id = "";
-}
-
-$theme_path="themes/".$theme."/";
-$image_path=$theme_path."images/";
-
-$log->info("Order detail view");
-
-
-$smarty = new vtigerCRM_Smarty;
-$smarty->assign("MOD", $mod_strings);
-$smarty->assign("APP", $app_strings);
-$smarty->assign("MODULE", $currentModule);
-
-$smarty->assign("UPDATEINFO", updateInfo($focus->id));
-
-$smarty->assign("THEME", $theme);
-$smarty->assign("IMAGE_PATH", $image_path);
-$smarty->assign("PRINT_URL", "phprint.php?jt=".session_id().$GLOBALS['request_string']);
-
-if (isset($focus->name)) {
-	$smarty->assign("NAME", $focus->name);
-} else {
-	$smarty->assign("NAME", "");
-}
-$smarty->assign("BLOCKS", getBlocks($currentModule, "detail_view", '', $focus->column_fields));
-
-$smarty->assign("CUSTOMFIELD", $cust_fld);
-$smarty->assign("ID", vtlib_purify($_REQUEST['record']));
-
-// Module Sequence Numbering
-$mod_seq_field = getModuleSequenceField($currentModule);
-if ($mod_seq_field != null) {
-	$mod_seq_id = $focus->column_fields[$mod_seq_field['name']];
-} else {
-	$mod_seq_id = $focus->id;
-}
-$smarty->assign('MOD_SEQ_ID', $mod_seq_id);
-
-$smarty->assign("SINGLE_MOD", 'Receiptcards');
-$category = getParentTab();
-$smarty->assign("CATEGORY", $category);
-
-if (isPermitted("Receiptcards", "EditView", $_REQUEST['record']) == 'yes') {
-	$smarty->assign("EDIT_DUPLICATE", "permitted");
-}
-
-$smarty->assign("CREATEPDF", "permitted");
-
-if (isPermitted("Receiptcards", "Delete", $_REQUEST['record']) == 'yes') {
-	$smarty->assign("DELETE", "permitted");
-}
+require_once 'modules/Vtiger/DetailView.php';
 
 //Get the associated Products and then display above Terms and Conditions
 $smarty->assign("ASSOCIATED_PRODUCTS", getReceiptcardsDetailAssociatedProducts($focus));
 
-$check_button = Button_Check($module);
-$smarty->assign("CHECK", $check_button);
-
-$tabid = getTabid("Receiptcards");
-$validationData = getDBValidationData($focus->tab_name, $tabid);
-$data = split_validationdataArray($validationData);
-$smarty->assign("VALIDATION_DATA_FIELDNAME", $data['fieldname']);
-$smarty->assign("VALIDATION_DATA_FIELDDATATYPE", $data['datatype']);
-$smarty->assign("VALIDATION_DATA_FIELDLABEL", $data['fieldlabel']);
-$smarty->assign("EDIT_PERMISSION", isPermitted($currentModule, 'EditView', $_REQUEST['record']));
-$smarty->assign("TODO_PERMISSION", CheckFieldPermission('parent_id', 'Calendar'));
-$smarty->assign("EVENT_PERMISSION", CheckFieldPermission('parent_id', 'Events'));
-
-$smarty->assign("IS_REL_LIST", isPresentRelatedLists($currentModule));
-if ($singlepane_view == 'true') {
-	$related_array = getRelatedLists($currentModule, $focus);
-	$smarty->assign("RELATEDLISTS", $related_array);
-}
-
-$smarty->assign("SinglePane_View", $singlepane_view);
-
-if (PerformancePrefs::getBoolean('DETAILVIEW_RECORD_NAVIGATION', true) && isset($_SESSION[$currentModule.'_listquery'])) {
-	$recordNavigationInfo = ListViewSession::getListViewNavigation($focus->id);
-	VT_detailViewNavigation($smarty, $recordNavigationInfo, $focus->id);
-}
-// Gather the custom link information to display
-include_once 'vtlib/Vtiger/Link.php';
-$customlink_params = array('MODULE'=>$currentModule, 'RECORD'=>$focus->id, 'ACTION'=>vtlib_purify($_REQUEST['action']));
-$smarty->assign('CUSTOM_LINKS', Vtiger_Link::getAllByType(getTabid($currentModule), array('DETAILVIEWBASIC','DETAILVIEW','DETAILVIEWWIDGET'), $customlink_params));
-
-// Record Change Notification
-$focus->markAsViewed($current_user->id);
-
-$smarty->assign('DETAILVIEW_AJAX_EDIT', PerformancePrefs::getBoolean('DETAILVIEW_AJAX_EDIT', true));
-
-$smarty->display("modules/Receiptcards/InventoryDetailView.tpl");
-
+$smarty->display('Inventory/InventoryDetailView.tpl');
 
 function getReceiptcardsDetailAssociatedProducts($focus) {
 	global $log;
@@ -248,9 +148,9 @@ function getReceiptcardsDetailAssociatedProducts($focus) {
 
 		$sc_image_tag = '';
 		if ($entitytype == 'Services') {
-			$sc_image_tag = '<a href="index.php?module=ServiceContracts&action=EditView&service_id='.$productid.'&return_module=Receiptcards&return_id='.$focus->id.'">' .
-						'<img border="0" src="'.vtiger_imageurl('handshake.gif', $theme).'" title="'. getTranslatedString('Add Service Contract').'" style="cursor: pointer;" align="absmiddle" />' .
-						'</a>';
+			$sc_image_tag = '<a href="index.php?module=ServiceContracts&action=EditView&service_id='.$productid.'&return_module=Receiptcards&return_id='.$focus->id.'">'
+				.'<img border="0" src="'.vtiger_imageurl('handshake.gif', $theme).'" title="'. getTranslatedString('Add Service Contract')
+				.'" style="cursor: pointer;" align="absmiddle" /></a>';
 		}
 
 		//For Product Name
@@ -270,7 +170,7 @@ function getReceiptcardsDetailAssociatedProducts($focus) {
 				   	<td align="right">'.$listprice.'</td>
 				   </tr>
 				   <tr>
-					   <td align="right">(-)&nbsp;<b><a href="javascript:;" onclick="alert(\''.$discount_info_message.'\'); ">'.$app_strings['LBL_DISCOUNT'].' : </a></b></td>
+					<td align="right">(-)&nbsp;<b><a href="javascript:;" onclick="alert(\''.$discount_info_message.'\');">'.$app_strings['LBL_DISCOUNT'].' : </a></b></td>
 				   </tr>
 				   <tr>
 				   	<td align="right" nowrap>'.$app_strings['LBL_TOTAL_AFTER_DISCOUNT'].' : </td>
@@ -320,7 +220,6 @@ function getReceiptcardsDetailAssociatedProducts($focus) {
 	//Decide discount
 	$finalDiscount = '0.00';
 	$final_discount_info = '0';
-	//if($focus->column_fields['hdnDiscountPercent'] != '') - previously (before changing to prepared statement) the selected option (either percent or amount) will have value and the other remains empty. So we can find the non selected item by empty check. But now with prepared statement, the non selected option stored as 0
 	if ($focus->column_fields['hdnDiscountPercent'] != '0') {
 		$finalDiscount = ($netTotal*$focus->column_fields['hdnDiscountPercent']/100);
 		$final_discount_info = $focus->column_fields['hdnDiscountPercent']." % of $netTotal = $finalDiscount";
@@ -334,7 +233,8 @@ function getReceiptcardsDetailAssociatedProducts($focus) {
 	$final_discount_info = 'onclick="alert(\''.$final_discount_info.'\');"';
 
 	$output .= '<tr>';
-	$output .= '<td align="right" class="crmTableRow small lineOnTop">(-)&nbsp;<b><a href="javascript:;" '.$final_discount_info.'>'.$app_strings['LBL_DISCOUNT'].'</a></b></td>';
+	$output .= '<td align="right" class="crmTableRow small lineOnTop">(-)&nbsp;<b><a href="javascript:;" '.$final_discount_info.'>';
+	$output .= $app_strings['LBL_DISCOUNT'].'</a></b></td>';
 	$output .= '<td align="right" class="crmTableRow small lineOnTop">'.$finalDiscount.'</td>';
 	$output .= '</tr>';
 
@@ -360,7 +260,8 @@ function getReceiptcardsDetailAssociatedProducts($focus) {
 		$tax_info_message .= "\\n ".$app_strings['LBL_TOTAL_TAX_AMOUNT']." = $taxtotal";
 
 		$output .= '<tr>';
-		$output .= '<td align="right" class="crmTableRow small">(+)&nbsp;<b><a href="javascript:;" onclick="alert(\''.$tax_info_message.'\');">'.$app_strings['LBL_TAX'].'</a></b></td>';
+		$output .= '<td align="right" class="crmTableRow small">(+)&nbsp;<b><a href="javascript:;" onclick="alert(\''.$tax_info_message.'\');">';
+		$output .= $app_strings['LBL_TAX'].'</a></b></td>';
 		$output .= '<td align="right" class="crmTableRow small">'.$taxtotal.'</td>';
 		$output .= '</tr>';
 	}
@@ -388,7 +289,8 @@ function getReceiptcardsDetailAssociatedProducts($focus) {
 	$shtax_info_message .= "\\n ".$app_strings['LBL_TOTAL_TAX_AMOUNT']." = $shtaxtotal";
 
 	$output .= '<tr>';
-	$output .= '<td align="right" class="crmTableRow small">(+)&nbsp;<b><a href="javascript:;" onclick="alert(\''.$shtax_info_message.'\')">'.$app_strings['LBL_TAX_FOR_SHIPPING_AND_HANDLING'].'</a></b></td>';
+	$output .= '<td align="right" class="crmTableRow small">(+)&nbsp;<b><a href="javascript:;" onclick="alert(\''.$shtax_info_message.'\')">';
+	$output .= $app_strings['LBL_TAX_FOR_SHIPPING_AND_HANDLING'].'</a></b></td>';
 	$output .= '<td align="right" class="crmTableRow small">'.$shtaxtotal.'</td>';
 	$output .= '</tr>';
 
@@ -405,8 +307,7 @@ function getReceiptcardsDetailAssociatedProducts($focus) {
 	$output .= '</tr>';
 	$output .= '</table>';
 
-	$log->debug("Exiting getDetailAssociatedProducts method ...");
+	$log->debug('Exiting getDetailAssociatedProducts');
 	return $output;
 }
-
 ?>
