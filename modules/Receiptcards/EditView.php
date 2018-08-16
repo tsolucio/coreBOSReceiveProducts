@@ -41,7 +41,7 @@ if (isset($_REQUEST['record']) && $_REQUEST['record'] != '') {
 		$focus->id = $_REQUEST['record'];
 		$focus->mode = 'edit';
 		$focus->retrieve_entity_info($_REQUEST['record'], $currentModule);
-		$focus->name = $focus->column_fields['subject'];
+		$focus->name = $focus->column_fields['receiptcards_no'];
 }
 if ($isduplicate == 'true') {
 	$smarty->assign('DUPLICATE_FROM', $focus->id);

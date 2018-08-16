@@ -9,7 +9,7 @@
 
 var i18nReceiptcards = '';
 ExecuteFunctions('getTranslatedStrings','i18nmodule=Receiptcards&tkeys=LBL_RECALCULATE_QUESTION').then(function (data) {
-	i18nReceiptcards = JSON.parse(data);;
+	i18nReceiptcards = JSON.parse(data);
 });
 
 function set_return(receiptcards_id, receiptcards_name) {
