@@ -35,4 +35,5 @@ function recalculateStock() {
 			jQuery('#status').hide();
 		});
 	}
+	window.open(baseURL, "vtlibui10", WindowSettings);
 }
