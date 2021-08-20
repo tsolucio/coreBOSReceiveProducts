@@ -9,6 +9,9 @@
  ************************************************************************************/
 require_once 'data/CRMEntity.php';
 require_once 'data/Tracker.php';
+require_once 'modules/com_vtiger_workflow/include.inc';
+require_once 'modules/com_vtiger_workflow/tasks/VTEntityMethodTask.inc';
+require_once 'modules/com_vtiger_workflow/VTEntityMethodManager.inc';
 require_once 'modules/InventoryDetails/InventoryDetails.php';
 
 class Receiptcards extends CRMEntity {
@@ -228,36 +231,6 @@ class Receiptcards extends CRMEntity {
 			$tm->saveTask($task);
 		}
 	}
-
-	/**
-	 * Handle saving related module information.
-	 * NOTE: This function has been added to CRMEntity (base class).
-	 * You can override the behavior by re-defining it here.
-	 */
-	// public function save_related_module($module, $crmid, $with_module, $with_crmid) { }
-
-	/**
-	 * Handle deleting related module information.
-	 * NOTE: This function has been added to CRMEntity (base class).
-	 * You can override the behavior by re-defining it here.
-	 */
-	//public function delete_related_module($module, $crmid, $with_module, $with_crmid) { }
-
-	/**
-	 * Here we override the parent's method,
-	 * This is done because the related lists for this module use a custom query
-	 * that queries the child module's table (column of the uitype10 field)
-	 *
-	 * @see data/CRMEntity#save_related_module($module, $crmid, $with_module, $with_crmid)
-	 */
-
-	/**
-	 * Here we override the parent's method
-	 * This is done because the related lists for this module use a custom query
-	 * that queries the child module's table (column of the uitype10 field)
-	 *
-	 * @see data/CRMEntity#delete_related_module($module, $crmid, $with_module, $with_crmid)
-	 */
 
 	/*
 	 * Function to get the secondary query part of a report
