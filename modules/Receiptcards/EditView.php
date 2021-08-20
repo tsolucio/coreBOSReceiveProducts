@@ -168,8 +168,9 @@ if ($focus->mode == 'edit') {
 	$smarty->assign('UPDATEINFO', updateInfo($focus->id));
 	$associated_prod = getAssociatedProducts('Receiptcards', $focus);
 	$smarty->assign('ASSOCIATEDPRODUCTS', $associated_prod);
+	$smarty->assign('AVAILABLE_PRODUCTS', (empty($associated_prod) ? 'false' : 'true'));
 	$smarty->assign('MODE', $focus->mode);
-} elseif (isset($_REQUEST['isDuplicate']) && $_REQUEST['isDuplicate'] == 'true') {
+} elseif ($isduplicate == 'true') {
 	$smarty->assign('ASSOCIATEDPRODUCTS', $associated_prod);
 	$smarty->assign('AVAILABLE_PRODUCTS', 'true');
 	$smarty->assign('MODE', $focus->mode);
@@ -235,6 +236,8 @@ if ($cbMap!=null && isPermitted('InventoryDetails', 'EditView')=='yes') {
 		$associated_prod = $product_Detail;
 	}
 }
+list($v1, $v2, $associated_prod, $customtemplatename) = cbEventHandler::do_filter('corebos.filter.inventory.itemrow.edit', array($currentModule, $focus, $associated_prod, ''));
+$smarty->assign('customtemplaterows', $customtemplatename);
 $smarty->assign('ASSOCIATEDPRODUCTS', $associated_prod);
 
 if (isset($_REQUEST['return_module'])) {
@@ -296,7 +299,7 @@ if ($focus->mode != 'edit' && $mod_seq_field != null) {
 	}
 }
 
-//in create new Receiptcards, get all available product taxes and shipping & Handling taxes
+//if create Receiptcards, get all available product taxes and shipping & Handling taxes
 if ($focus->mode != 'edit') {
 	$tax_details = getAllTaxes('available');
 	$sh_tax_details = getAllTaxes('available', 'sh');
@@ -328,17 +331,18 @@ $smarty->assign('Module_Popup_Edit', isset($_REQUEST['Module_Popup_Edit']) ? vtl
 $smarty->assign('SandRActive', GlobalVariable::getVariable('Application_SaveAndRepeatActive', 0, $currentModule));
 $cbMapFDEP = Vtiger_DependencyPicklist::getFieldDependencyDatasource($currentModule);
 $smarty->assign('FIELD_DEPENDENCY_DATASOURCE', json_encode($cbMapFDEP));
-
 //Get Service or Product by default when create
 $smarty->assign('PRODUCT_OR_SERVICE', GlobalVariable::getVariable('Inventory_ProductService_Default', 'Products', $currentModule, $current_user->id));
 $smarty->assign('Inventory_ListPrice_ReadOnly', GlobalVariable::getVariable('Inventory_ListPrice_ReadOnly', '0', $currentModule, $current_user->id));
+$smarty->assign('Inventory_Comment_Style', GlobalVariable::getVariable('Inventory_Comment_Style', 'width:70%;height:40px;', $currentModule, $current_user->id));
+$smarty->assign('Application_Textarea_Style', GlobalVariable::getVariable('Application_Textarea_Style', 'height:140px;', $currentModule, $current_user->id));
 //Set taxt type group or individual by default when create
 $smarty->assign('TAX_TYPE', GlobalVariable::getVariable('Inventory_Tax_Type_Default', 'individual', $currentModule, $current_user->id));
+$smarty->assign('TAXFILLINMODE', GlobalVariable::getVariable('Inventory_Tax_FillInMode', 'All', $currentModule, $current_user->id));
 //Show or not the Header to copy address to left or right
 $smarty->assign('SHOW_COPY_ADDRESS', GlobalVariable::getVariable('Application_Show_Copy_Address', 1, $currentModule, $current_user->id));
 $smarty->assign('SHOW_SHIPHAND_CHARGES', GlobalVariable::getVariable('Inventory_Show_ShippingHandlingCharges', 1, $currentModule, $current_user->id));
 $smarty->assign('ShowInventoryLines', strpos(GlobalVariable::getVariable('Inventory_DoNotUseLines', '', $currentModule, $current_user->id), $currentModule)===false);
-$smarty->assign('Application_Textarea_Style', GlobalVariable::getVariable('Application_Textarea_Style', 'height:140px;', $currentModule, $current_user->id));
 
 $smarty->display('Inventory/InventoryEditView.tpl');
 ?>

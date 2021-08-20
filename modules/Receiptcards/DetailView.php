@@ -17,6 +17,7 @@ require_once 'modules/Vtiger/DetailView.php';
 
 //Get the associated Products and then display above Terms and Conditions
 $smarty->assign('ASSOCIATED_PRODUCTS', getDetailAssociatedProducts($currentModule, $focus));
+$smarty->assign('ShowInventoryLines', strpos(GlobalVariable::getVariable('Inventory_DoNotUseLines', '', $currentModule, $current_user->id), $currentModule)===false);
 
 $smarty->display('Inventory/InventoryDetailView.tpl');
 ?>

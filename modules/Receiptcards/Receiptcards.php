@@ -96,7 +96,7 @@ class Receiptcards extends CRMEntity {
 	public $mandatory_fields = array('createdtime', 'modifiedtime', 'receiptcards_no');
 
 	public function save_module($module) {
-		global $updateInventoryProductRel_deduct_stock;
+		global $updateInventoryProductRel_deduct_stock, $adb;
 		if ($this->HasDirectImageField) {
 			$this->insertIntoAttachment($this->id, $module);
 		}
@@ -116,26 +116,27 @@ class Receiptcards extends CRMEntity {
 		// Update the currency id and the conversion rate for the invoice
 		$update_query = "update vtiger_receiptcards set currency_id=?, conversion_rate=? where receiptcardid=?";
 		$update_params = array($this->column_fields['currency_id'], $this->column_fields['conversion_rate'], $this->id);
-		$this->db->pquery($update_query, $update_params);
+		$adb->pquery($update_query, $update_params);
 	}
 
 	public function restore($module, $id) {
-		$this->db->println("TRANS restore starts $module");
-		$this->db->startTransaction();
+		global $adb;
+		$adb->println("TRANS restore starts $module");
+		$adb->startTransaction();
 
-		$this->db->pquery('UPDATE vtiger_crmentity SET deleted=0 WHERE crmid = ?', array($id));
+		$adb->pquery('UPDATE vtiger_crmentity SET deleted=0 WHERE crmid = ?', array($id));
 		//Restore related entities/records
 		$this->restoreRelatedRecords($module, $id);
 
-		$product_info = $this->db->pquery('SELECT productid, quantity, sequence_no, incrementondel from vtiger_inventoryproductrel WHERE id=?', array($id));
-		$numrows = $this->db->num_rows($product_info);
+		$product_info = $adb->pquery('SELECT productid, quantity, sequence_no, incrementondel from vtiger_inventoryproductrel WHERE id=?', array($id));
+		$numrows = $adb->num_rows($product_info);
 		for ($index = 0; $index < $numrows; $index++) {
-			$productid = $this->db->query_result($product_info, $index, 'productid');
-			$qty = $this->db->query_result($product_info, $index, 'quantity');
+			$productid = $adb->query_result($product_info, $index, 'productid');
+			$qty = $adb->query_result($product_info, $index, 'quantity');
 			addToProductStock($productid, $qty);
 		}
-		$this->db->completeTransaction();
-		$this->db->println("TRANS restore ends");
+		$adb->completeTransaction();
+		$adb->println("TRANS restore ends");
 	}
 
 	/**
@@ -187,7 +188,19 @@ class Receiptcards extends CRMEntity {
 			$task->methodName = 'UpdateInventory';
 			$task->summary='Update product stock';
 			$tm->saveTask($task);
-
+			// set correct capitalization of field names
+			$flds = array(
+				'adjustment' => 'txtAdjustment',
+				'subtotal' => 'hdnSubTotal',
+				'total' => 'hdnGrandTotal',
+				'taxtype' => 'hdnTaxType',
+				'discount_percent' => 'hdnDiscountPercent',
+				'discount_amount' => 'hdnDiscountAmount',
+				's_h_amount' => 'hdnS_H_Amount',
+			);
+			foreach ($flds as $column => $field) {
+				$adb->pquery('update vtiger_field set fieldname=? where columnname=? and tablename=?', [$field, $column, 'vtiger_receiptcards']);
+			}
 			$this->setModuleSeqNumber('configure', $modulename, 'RECM-', '0000001');
 		} elseif ($event_type == 'module.disabled') {
 			// Handle actions when this module is disabled.
