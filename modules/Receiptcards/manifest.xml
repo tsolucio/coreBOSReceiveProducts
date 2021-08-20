@@ -180,7 +180,7 @@
 <defaultvalue></defaultvalue>
 <sequence>3</sequence>
 <maximumlength>100</maximumlength>
-<typeofdata>I~O</typeofdata>
+<typeofdata>V~O</typeofdata>
 <quickcreate>1</quickcreate>
 <quickcreatesequence></quickcreatesequence>
 <displaytype>1</displaytype>
