@@ -246,7 +246,7 @@ class Receiptcards extends CRMEntity {
 	 * returns the query string formed on fetching the related data for report for secondary module
 	 */
 	public function generateReportsSecQuery($module, $secmodule, $queryPlanner, $type = '', $where_condition = '') {
-		$query = $this->getRelationQuery($module, $secmodule, 'vtiger_receiptcards', 'receiptcardid');
+		$query = $this->getRelationQuery($module, $secmodule, 'vtiger_receiptcards', 'receiptcardid', $queryPlanner);
 		$query .= " left join vtiger_currency_info as vtiger_currency_info$secmodule on vtiger_currency_info$secmodule.id = vtiger_receiptcards.currency_id ";
 		if (($type !== 'COLUMNSTOTOTAL') || ($type == 'COLUMNSTOTOTAL' && $where_condition == 'add')) {
 			$query.='left join vtiger_inventoryproductrel as vtiger_inventoryproductrelReceiptcards on vtiger_receiptcards.receiptcardid=vtiger_inventoryproductrelReceiptcards.id
